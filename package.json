@@ -1,0 +1,15 @@
+{
+  "name": "lucky-16-cards-app",
+  "version": "1.0.0",
+  "description": "lucky 16 cards game application frontend UI",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vspatil",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^27.0.0"
+  }
+}
