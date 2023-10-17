@@ -1,0 +1,243 @@
+@font-face {
+    font-family: Poppins-Medium;
+    src: url(../assets/Fonts/Poppins-Medium.ttf);
+}
+
+body {
+    background-image: url('../assets/images/background/background-image.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: calc(100vh - 16px);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 16px);
+}
+
+/* User information css start */
+.user-information-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.blue-box {
+    height: 20px;
+    padding: 5px;
+    background-color: #411A5D;
+    color: #fff;
+    font-family: Poppins-Medium;
+    font-size: 16px;
+}
+
+.game-id {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.draw-time {
+    text-align: center;
+}
+
+.time {
+    display: flex;
+    justify-content: center;
+    margin-top: 3px;
+}
+
+.balance {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.close-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* User information css end */
+
+.center-area {
+    display: flex;
+    margin-top: 30px;
+    width: 100%;
+    height: 100%;
+}
+
+/* Wheel area css start */
+.wheel-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: auto;
+    width: 40%;
+    margin-right: 15px;
+}
+
+.wheel-one {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    z-index: 5;
+}
+
+.wheel-two {
+    position: absolute;
+    top: 55px;
+    left: 20px;
+    width: 245px;
+    height: 225px;
+    z-index: 2;
+}
+
+.wheel-three {
+    position: absolute;
+    top: 87px;
+    left: 56px;
+    width: 172px;
+    height: 160px;
+    z-index: 2;
+}
+
+.wheel-four {
+    position: absolute;
+    top: 120px;
+    left: 95px;
+    width: 95px;
+    height: 95px;
+    z-index: 2;
+}
+
+/* Wheel area css end */
+
+.cards-container {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: calc(100% - 10px);
+}
+
+.cards-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: calc(100% / 6);
+}
+
+.all-sets {
+    margin-bottom: 10px;
+}
+
+.cards-row>img {
+    width: calc((100% - 30px) / 4);
+    min-width: calc((100% - 30px) / 4);
+    max-width: calc((100% - 30px) / 4);
+}
+
+.winners-list>img {
+    width: 100%;
+    min-width: 100%;
+}
+
+div>.cards-row>img:nth-child(1),
+div>.cards-row>img:nth-child(2),
+div>.cards-row>img:nth-child(3) {
+    margin-right: 10px;
+}
+
+.timer-container {
+    display: grid;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+}
+
+/* Bottom area starts */
+.bottom-area {
+    display: flex;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.buttons-area {
+    width: 30%;
+    height: 100%;
+    margin-right: 15px;
+}
+
+.bet-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    height: 30px;
+}
+
+.yellow-box-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.yellow-box {
+    height: 30px;
+    width: 46%;
+    background-color: #ED9309;
+    border: 2px solid #DF8105;
+}
+
+.coins-area {
+    display: grid;
+    gap: 10px;
+    width: 50%;
+}
+
+.coins-btn-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.coins-btn-container>img {
+    width: 60px;
+    height: 60px;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+}
+
+.btn-container>div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% / 4);
+    border: 2px solid #DAE648;
+    background: #009E01;
+    border-radius: 20px;
+    color: #000000;
+    font-family: Poppins-Medium;
+    font-size: 24px;
+}
+
+.print-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+}
+
+.print-area>img {
+    width: 100px;
+    height: 100px;
+}
