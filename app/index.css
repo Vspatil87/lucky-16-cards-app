@@ -1,12 +1,27 @@
+:root {
+    --sFontSize: 12px;
+    --mFontSize: 14px;
+    --lFontSize: 16px;
+    --xlFontSize: 24px;
+    --blackColor: #000;
+    --whiteColor: #fff;
+}
+
 @font-face {
     font-family: Poppins-Medium;
     src: url(../assets/Fonts/Poppins-Medium.ttf);
+}
+
+@font-face {
+    font-family: Poppins-SemiBold;
+    src: url(../assets/Fonts/Poppins-SemiBold.ttf);
 }
 
 body {
     background-image: url('../assets/images/background/background-image.jpg');
     background-repeat: no-repeat;
     background-size: cover;
+    user-select: none;
     height: calc(100vh - 16px);
 }
 
@@ -27,9 +42,9 @@ body {
     height: 20px;
     padding: 5px;
     background-color: #411A5D;
-    color: #fff;
+    color: var(--whiteColor);
     font-family: Poppins-Medium;
-    font-size: 16px;
+    font-size: var(--lFontSize);
 }
 
 .game-id {
@@ -70,49 +85,60 @@ body {
 }
 
 /* Wheel area css start */
+
+/* .my-img {
+    animation: rotateImg 2s linear infinite;
+}
+
+@keyframes rotateImg {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(359deg);
+    }
+} */
+
 .wheel-container {
     position: relative;
-    top: 0;
-    left: 0;
-    margin: auto;
-    width: 40%;
-    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+    min-width: 30%;
+    max-width: 30%;
 }
 
 .wheel-one {
     position: relative;
-    top: 0;
-    left: 0;
-    width: 300px;
-    height: 300px;
+    width: 100%;
     z-index: 5;
+    object-fit: contain;
 }
 
 .wheel-two {
     position: absolute;
-    top: 55px;
-    left: 20px;
-    width: 245px;
-    height: 225px;
+    width: calc(100% - 50px);
     z-index: 2;
+    object-fit: contain;
+    transform: translate(-2px, 17px);
 }
 
 .wheel-three {
     position: absolute;
-    top: 87px;
-    left: 56px;
-    width: 172px;
-    height: 160px;
+    width: calc(100% - 130px);
+    transform: translate(0px, 16px);
     z-index: 2;
+    object-fit: contain;
 }
 
 .wheel-four {
     position: absolute;
-    top: 120px;
-    left: 95px;
-    width: 95px;
-    height: 95px;
+    width: calc(100% - 220px);
     z-index: 2;
+    transform: translate(-3px, 16px);
+    object-fit: contain;
 }
 
 /* Wheel area css end */
@@ -120,6 +146,7 @@ body {
 .cards-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 50%;
     height: calc(100% - 10px);
 }
@@ -131,46 +158,418 @@ body {
     height: calc(100% / 6);
 }
 
+/* All Selection row (hearts, spades, diamonds, clubs) */
 .all-sets {
     margin-bottom: 10px;
 }
 
-.cards-row>img {
-    width: calc((100% - 30px) / 4);
-    min-width: calc((100% - 30px) / 4);
-    max-width: calc((100% - 30px) / 4);
+.all-hearts,
+.all-spades,
+.all-diamonds,
+.all-clubs {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: calc(100% / 4);
+    align-items: center;
 }
 
-.winners-list>img {
+.all-hearts>img,
+.all-spades>img,
+.all-diamonds>img,
+.all-clubs>img {
     width: 100%;
-    min-width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
-div>.cards-row>img:nth-child(1),
-div>.cards-row>img:nth-child(2),
-div>.cards-row>img:nth-child(3) {
-    margin-right: 10px;
+.all-hearts>.all,
+.all-spades>.all,
+.all-diamonds>.all,
+.all-clubs>.all {
+    position: absolute;
+    bottom: 1px;
+    font-family: Poppins-Medium;
+    font-size: var(--lFontSize);
 }
 
-.timer-container {
-    display: grid;
+.all-hearts>.play {
+    position: absolute;
+    top: 28%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+}
+
+.all-spades>.play {
+    position: absolute;
+    top: 30%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--whiteColor);
+}
+
+.all-diamonds>.play {
+    position: absolute;
+    top: 32%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+}
+
+.all-clubs>.play {
+    position: absolute;
+    top: 32%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--whiteColor);
+}
+
+/* Ace single selection row */
+.heart-ace,
+.spade-ace,
+.diamond-ace,
+.club-ace {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: calc(100% / 4);
+    align-items: center;
+}
+
+.heart-ace>img,
+.spade-ace>img,
+.diamond-ace>img,
+.club-ace>img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.heart-ace>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+}
+
+.spade-ace>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--whiteColor);
+}
+
+.diamond-ace>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+}
+
+.club-ace>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--whiteColor);
+}
+
+
+/* King single selection row */
+.heart-king,
+.spade-king,
+.diamond-king,
+.club-king {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: calc(100% / 4);
+    align-items: center;
+}
+
+.heart-king>img,
+.spade-king>img,
+.diamond-king>img,
+.club-king>img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.heart-king>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+}
+
+.spade-king>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--whiteColor);
+}
+
+.diamond-king>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+}
+
+.club-king>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--whiteColor);
+}
+
+
+/* Queen single selection row */
+.heart-queen,
+.spade-queen,
+.diamond-queen,
+.club-queen {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: calc(100% / 4);
+    align-items: center;
+}
+
+.heart-queen>img,
+.spade-queen>img,
+.diamond-queen>img,
+.club-queen>img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.heart-queen>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+}
+
+.spade-queen>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--whiteColor);
+}
+
+.diamond-queen>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+}
+
+.club-queen>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--whiteColor);
+}
+
+
+/* Joker single selection row */
+.heart-joker,
+.spade-joker,
+.diamond-joker,
+.club-joker {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: calc(100% / 4);
+    align-items: center;
+}
+
+.heart-joker>img,
+.spade-joker>img,
+.diamond-joker>img,
+.club-joker>img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.heart-joker>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+}
+
+.spade-joker>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--whiteColor);
+}
+
+.diamond-joker>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+}
+
+.club-joker>span {
+    position: absolute;
+    top: 49%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--whiteColor);
+}
+
+/* End Center Cards Css */
+
+/* Last 10 Winners box Css Start */
+.winners-list {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 80px;
+    max-height: 100px;
+    border: 2px solid var(--blackColor);
+    background: #002F77;
+    border-radius: 5px;
+    padding: 5px 0;
+    width: 92%;
+}
+
+.last-win-conatiner {
+    display: flex;
+    justify-content: flex-start;
     flex-direction: column;
+    align-items: center;
+    height: calc(100% - 10px);
+    width: calc(100% / 10);
+    margin: 0 5px;
+}
+
+.last-win-conatiner>img {
+    height: calc(100% - 20px);
+    min-height: calc(100% - 20px);
+    max-height: calc(100% - 20px);
+    width: 100%;
+    visibility: hidden;
+}
+
+.last-win-box {
+    display: flex;
     justify-content: center;
     align-items: center;
+    border: 1px solid var(--whiteColor);
+    min-height: 20px;
+    width: 100%;
+    background: var(--whiteColor);
+    margin-top: 2px;
+    border-radius: 3px;
+    font-family: Poppins-Medium;
+    font-size: var(--lFontSize);
+    visibility: hidden;
+}
+
+/* Last 10 Winners box Css End */
+
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
     width: 20%;
+    max-height: calc(100% - 80px);
+}
+
+.timer {
+    max-height: calc(100% / 5);
+    margin-left: 10%;
+    margin-bottom: 10px;
+}
+
+svg {
+    object-fit: contain;
+    height: 100%;
+}
+
+.all-aces,
+.all-kings,
+.all-queens,
+.all-jokers {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100% / 6);
+    margin-bottom: 10px;
+    object-fit: contain;
+    margin-left: 10%;
+}
+
+.all-aces>img,
+.all-kings>img,
+.all-queens>img,
+.all-jokers>img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.all-aces>.play,
+.all-kings>.play,
+.all-queens>.play,
+.all-jokers>.play {
+    position: absolute;
+    top: 50%;
+    right: 25%;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+}
+
+.all-aces>.all,
+.all-kings>.all,
+.all-queens>.all,
+.all-jokers>.all {
+    position: absolute;
+    top: 3px;
+    font-family: Poppins-Medium;
+    font-size: var(--sFontSize);
 }
 
 /* Bottom area starts */
 .bottom-area {
     display: flex;
     width: 100%;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
 .buttons-area {
     width: 30%;
-    height: 100%;
-    margin-right: 15px;
+    min-width: 30%;
+    max-width: 30%;
+    display: flex;
+    flex-direction: column;
+    margin-right: 5px;
+    justify-content: center;
 }
 
 .bet-info {
@@ -189,15 +588,36 @@ div>.cards-row>img:nth-child(3) {
 
 .yellow-box {
     height: 30px;
-    width: 46%;
+    width: 45%;
     background-color: #ED9309;
-    border: 2px solid #DF8105;
+    border: 3px solid #DF8105;
+}
+
+.play-count {
+    font-family: Poppins-SemiBold;
+    font-size: var(--xlFontSize);
+    color: var(--blackColor);
+    padding-left: 5px;
+    height: 32px;
+}
+
+.barcode {
+    text-align: center;
+}
+
+input::placeholder {
+    font-family: Poppins-SemiBold;
+    font-size: var(--xlFontSize);
+    color: var(--blackColor);
+    transform: translateY(5px);
 }
 
 .coins-area {
     display: grid;
     gap: 10px;
     width: 50%;
+    min-width: 50%;
+    max-width: 50%;
 }
 
 .coins-btn-container {
@@ -221,23 +641,29 @@ div>.cards-row>img:nth-child(3) {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: calc(100% / 4);
+    max-width: 180px;
+    width: calc((100% / 4) - 10px);
     border: 2px solid #DAE648;
     background: #009E01;
     border-radius: 20px;
-    color: #000000;
-    font-family: Poppins-Medium;
-    font-size: 24px;
+    color: var(--blackColor);
+    font-family: Poppins-SemiBold;
+    font-size: var(--xlFontSize);
 }
 
 .print-area {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 20%;
+    margin-left: 3%;
 }
 
 .print-area>img {
     width: 100px;
     height: 100px;
+}
+
+.btn {
+    cursor: pointer;
 }

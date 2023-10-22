@@ -2,11 +2,12 @@
 <html>
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
-  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lucky 16 Cards</title>
   <link rel="stylesheet" href="index.css">
+  <script src="index.js"></script>
 </head>
 
 <body>
@@ -18,70 +19,201 @@
       </div>
       <div class="blue-box draw-time">
         <label>DRAW TIME</label>
-        <span class="time">7 : 03</span>
+        <span id="time" class="time">7 : 03</span>
       </div>
       <div class="blue-box balance">
-        <label>BALANCE :</label>
-        <span>&nbsp;15000</span>
+        <label>BALANCE :&nbsp;</label>
+        <span id="balance">15000</span>
       </div>
-      <div class="blue-box account">
-        <label>ACCOUNT</label>
+      <div class="blue-box account btn">
+        <label class="btn">ACCOUNT</label>
       </div>
-      <div class="blue-box password">
-        <label>PASSWORD</label>
+      <div class="blue-box password btn">
+        <label class="btn">PASSWORD</label>
       </div>
-      <div class="close-icon">
-        <img src="../assets/images/buttons/close-icon.png" alt="close" width="40px" height="30px">
+      <div class="close-icon btn">
+        <img class="btn" src="../assets/images/buttons/close-icon.png" alt="close" width="40px" height="30px">
       </div>
     </div>
 
     <div class="center-area">
       <div class="wheel-container">
         <img class="wheel-one" src="../assets/images/wheel/wheel-one.png" alt="">
-        <img class="wheel-two" src="../assets/images/wheel/wheel-two.png" alt="">
+        <img class="wheel-two my-img" src="../assets/images/wheel/wheel-two.png" alt="">
         <img class="wheel-three" src="../assets/images/wheel/wheel-three.png" alt="">
         <img class="wheel-four" src="../assets/images/wheel/wheel-four.png" alt="">
       </div>
       <div class="cards-container">
         <div class="cards-row all-sets">
-          <img class="all-hearts" src="../assets/images/all-selection-cards/heart.png" alt="all-hearts">
-          <img class="all-spades" src="../assets/images/all-selection-cards/spade.png" alt="all-spades">
-          <img class="all-diamonds" src="../assets/images/all-selection-cards/diamond.png" alt="all-diamonds">
-          <img class="all-clubs" src="../assets/images/all-selection-cards/club.png" alt="all-clubs">
+          <div class="all-hearts btn" onclick="setMultiBets('h')">
+            <img src="../assets/images/all-selection-cards/heart.png" alt="all-hearts">
+            <span id="h" class="play">Play</span>
+            <span class="all">All</span>
+          </div>
+          <div class="all-spades btn" onclick="setMultiBets('s')">
+            <img src="../assets/images/all-selection-cards/spade.png" alt="all-spades">
+            <span id="s" class="play">Play</span>
+            <span class="all">All</span>
+          </div>
+          <div class="all-diamonds btn" onclick="setMultiBets('d')">
+            <img src="../assets/images/all-selection-cards/diamond.png" alt="all-diamonds">
+            <span id="d" class="play">Play</span>
+            <span class="all">All</span>
+          </div>
+          <div class="all-clubs btn" onclick="setMultiBets('c')">
+            <img src="../assets/images/all-selection-cards/club.png" alt="all-clubs">
+            <span id="c" class="play">Play</span>
+            <span class="all">All</span>
+          </div>
         </div>
         <div class="cards-row">
-          <img class="heart-ace" src="../assets/images/cards/heart-ace.png" alt="heart-ace">
-          <img class="spade-ace" src="../assets/images/cards/spade-ace.png" alt="spade-ace">
-          <img class="diamond-ace" src="../assets/images/cards/diamond-ace.png" alt="diamond-ace">
-          <img class="club-ace" src="../assets/images/cards/club-ace.png" alt="club-ace">
+          <div class="heart-ace btn" onclick="setBet(0)">
+            <img src="../assets/images/cards/heart-ace.png" alt="heart-ace">
+            <span id="0">Play</span>
+          </div>
+          <div class="spade-ace btn" onclick="setBet(1)">
+            <img class="spade-ace" src="../assets/images/cards/spade-ace.png" alt="spade-ace">
+            <span id="1">Play</span>
+          </div>
+          <div class="diamond-ace btn" onclick="setBet(2)">
+            <img class="diamond-ace" src="../assets/images/cards/diamond-ace.png" alt="diamond-ace">
+            <span id="2">Play</span>
+          </div>
+          <div class="club-ace" onclick="setBet(3)">
+            <img class="club-ace btn" src="../assets/images/cards/club-ace.png" alt="club-ace">
+            <span id="3">Play</span>
+          </div>
         </div>
         <div class="cards-row">
-          <img class="heart-king" src="../assets/images/cards/heart-king.png" alt="heart-king">
-          <img class="spade-king" src="../assets/images/cards/spade-king.png" alt="spade-king">
-          <img class="diamond-king" src="../assets/images/cards/diamond-king.png" alt="diamond-king">
-          <img class="club-king" src="../assets/images/cards/club-king.png" alt="club-king">
+          <div class="heart-king btn" onclick="setBet(4)">
+            <img src="../assets/images/cards/heart-king.png" alt="heart-king">
+            <span id="4">Play</span>
+          </div>
+          <div class="spade-king btn" onclick="setBet(5)">
+            <img src="../assets/images/cards/spade-king.png" alt="spade-king">
+            <span id="5">Play</span>
+          </div>
+          <div class="diamond-king btn" onclick="setBet(6)">
+            <img src="../assets/images/cards/diamond-king.png" alt="diamond-king">
+            <span id="6">Play</span>
+          </div>
+          <div class="club-king btn" onclick="setBet(7)">
+            <img src="../assets/images/cards/club-king.png" alt="club-king">
+            <span id="7">Play</span>
+          </div>
         </div>
         <div class="cards-row">
-          <img class="heart-queen" src="../assets/images/cards/heart-queen.png" alt="heart-queen">
-          <img class="spade-queen" src="../assets/images/cards/spade-queen.png" alt="spade-queen">
-          <img class="diamond-queen" src="../assets/images/cards/diamond-queen.png" alt="diamond-queen">
-          <img class="club-queen" src="../assets/images/cards/club-queen.png" alt="club-queen">
+          <div class="heart-queen btn" onclick="setBet(8)">
+            <img src="../assets/images/cards/heart-queen.png" alt="heart-queen">
+            <span id="8">Play</span>
+          </div>
+          <div class="spade-queen btn" onclick="setBet(9)">
+            <img src="../assets/images/cards/spade-queen.png" alt="spade-queen">
+            <span id="9">Play</span>
+          </div>
+          <div class="diamond-queen btn" onclick="setBet(10)">
+            <img src="../assets/images/cards/diamond-queen.png" alt="diamond-queen">
+            <span id="10">Play</span>
+          </div>
+          <div class="club-queen btn" onclick="setBet(11)">
+            <img src="../assets/images/cards/club-queen.png" alt="club-queen">
+            <span id="11">Play</span>
+          </div>
         </div>
         <div class="cards-row">
-          <img class="heart-joker" src="../assets/images/cards/heart-joker.png" alt="heart-joker">
-          <img class="spade-joker" src="../assets/images/cards/spade-joker.png" alt="spade-joker">
-          <img class="diamond-joker" src="../assets/images/cards/diamond-joker.png" alt="diamond-joker">
-          <img class="club-joker" src="../assets/images/cards/club-joker.png" alt="club-joker">
+          <div class="heart-joker btn" onclick="setBet(12)">
+            <img src="../assets/images/cards/heart-joker.png" alt="heart-joker">
+            <span id="12">Play</span>
+          </div>
+          <div class="spade-joker btn" onclick="setBet(13)">
+            <img src="../assets/images/cards/spade-joker.png" alt="spade-joker">
+            <span id="13">Play</span>
+          </div>
+          <div class="diamond-joker btn" onclick="setBet(14)">
+            <img src="../assets/images/cards/diamond-joker.png" alt="diamond-joker">
+            <span id="14">Play</span>
+          </div>
+          <div class="club-joker btn" onclick="setBet(15)">
+            <img src="../assets/images/cards/club-joker.png" alt="club-joker">
+            <span id="15">Play</span>
+          </div>
         </div>
-        <div class="cards-row winners-list">
-          <img src="../assets/images/winners-list.png" alt="winners">
+        <div class="winners-list">
+          <div class="last-win-conatiner" style="width: calc(100% / 7);">
+            <img class="last-win-images">
+            <div class="last-win-box">1X</div>
+          </div>
+          <div class="last-win-conatiner">
+            <img class="last-win-images">
+            <div class="last-win-box"></div>
+          </div>
+          <div class="last-win-conatiner">
+            <img class="last-win-images">
+            <div class="last-win-box"></div>
+          </div>
+          <div class="last-win-conatiner">
+            <img class="last-win-images">
+            <div class="last-win-box"></div>
+          </div>
+          <div class="last-win-conatiner">
+            <img class="last-win-images">
+            <div class="last-win-box"></div>
+          </div>
+          <div class="last-win-conatiner">
+            <img class="last-win-images">
+            <div class="last-win-box"></div>
+          </div>
+          <div class="last-win-conatiner">
+            <img class="last-win-images">
+            <div class="last-win-box"></div>
+          </div>
+          <div class="last-win-conatiner">
+            <img class="last-win-images">
+            <div class="last-win-box"></div>
+          </div>
+          <div class="last-win-conatiner">
+            <img class="last-win-images">
+            <div class="last-win-box"></div>
+          </div>
+          <div class="last-win-conatiner">
+            <img class="last-win-images">
+            <div class="last-win-box"></div>
+          </div>
         </div>
       </div>
       <div class="timer-container">
-        <img src="../assets/images/all-selection-cards/ace.png" alt="all-aces">
-        <img src="../assets/images/all-selection-cards/king.png" alt="all-kings">
-        <img src="../assets/images/all-selection-cards/queen.png" alt="all-queens">
-        <img src="../assets/images/all-selection-cards/joker.png" alt="all-jokers">
+        <div class="timer">
+          <svg width="137" height="137" viewBox="-17.125 -17.125 171.25 171.25" version="1.1"
+            xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
+            <circle r="58.5" cx="68.5" cy="68.5" fill="transparent" stroke="#a9a5bc" stroke-width="16px"
+              stroke-dasharray="367.38px" stroke-dashoffset="0"></circle>
+            <circle r="58.5" cx="68.5" cy="68.5" stroke="#06de19" stroke-width="16px" stroke-linecap="butt"
+              stroke-dashoffset="99px" fill="transparent" stroke-dasharray="367.38px"></circle>
+            <text x="41px" y="85px" fill="#000000" font-size="52px" font-weight="bold"
+              style="transform:rotate(90deg) translate(0px, -133px)">73</text>
+          </svg>
+        </div>
+
+        <div class="all-aces btn" onclick="setMultiBets('a')">
+          <img src="../assets/images/all-selection-cards/ace.png" alt="all-aces">
+          <span id="a" class="play">Play</span>
+          <span class="all">All Aces</span>
+        </div>
+        <div class="all-kings btn" onclick="setMultiBets('k')">
+          <img src="../assets/images/all-selection-cards/king.png" alt="all-kings">
+          <span id="k" class="play">Play</span>
+          <span class="all">All Kings</span>
+        </div>
+        <div class="all-queens btn" onclick="setMultiBets('q')">
+          <img src="../assets/images/all-selection-cards/queen.png" alt="all-queens">
+          <span id="q" class="play">Play</span>
+          <span class="all">All Queens</span>
+        </div>
+        <div class="all-jokers btn" onclick="setMultiBets('j')">
+          <img src="../assets/images/all-selection-cards/joker.png" alt="all-jokers">
+          <span id="j" class="play">Play</span>
+          <span class="all">All Jocks</span>
+        </div>
       </div>
     </div>
 
@@ -91,29 +223,29 @@
           Place your chips
         </div>
         <div class="yellow-box-container">
-          <div class="yellow-box"></div>
-          <div class="yellow-box"></div>
+          <div class="yellow-box play-count">PLAY :&nbsp;<span id="play-count"></span></div>
+          <input type="text" class="yellow-box barcode" placeholder="BARCODE">
         </div>
       </div>
 
       <div class="coins-area">
         <div class="coins-btn-container">
-          <img src="../assets/images/coins/coin-5.png" alt="5">
-          <img src="../assets/images/coins/coin-10.png" alt="10">
-          <img src="../assets/images/coins/coin-20.png" alt="20">
-          <img src="../assets/images/coins/coin-50.png" alt="50">
-          <img src="../assets/images/coins/coin-100.png" alt="100">
-          <!-- 5000 Coin image pending -->
+          <img onclick="selectCoin(5)" class="btn" id="coin-5" src="../assets/images/coins/coin-5.png" alt="5">
+          <img onclick="selectCoin(10)" class="btn" id="coin-10" src="../assets/images/coins/coin-10.png" alt="10">
+          <img onclick="selectCoin(20)" class="btn" id="coin-20" src="../assets/images/coins/coin-20.png" alt="20">
+          <img onclick="selectCoin(50)" class="btn" id="coin-50" src="../assets/images/coins/coin-50.png" alt="50">
+          <img onclick="selectCoin(100)" class="btn" id="coin-100" src="../assets/images/coins/coin-100.png" alt="100">
+          <img onclick="selectCoin(500)" class="btn" id="coin-500" src="../assets/images/coins/coin-500.png" alt="500">
         </div>
         <div class="btn-container">
-          <div class="rebet">REBET</div>
-          <div class="double">DOUBLE</div>
-          <div class="reprint">REPRINT</div>
-          <div class="clear">CLEAR</div>
+          <div onclick="rebet()" class="rebet btn">REBET</div>
+          <div onclick="double()" class="double btn">DOUBLE</div>
+          <div onclick="reprint()" class="reprint btn">REPRINT</div>
+          <div onclick="reset()" class="clear btn">CLEAR</div>
         </div>
       </div>
 
-      <div class="print-area">
+      <div class="print-area btn" onclick="print()">
         <img src="../assets/images/buttons/print-btn.png" alt="Print">
       </div>
     </div>
