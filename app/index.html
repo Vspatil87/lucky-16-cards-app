@@ -8,14 +8,15 @@
   <title>Lucky 16 Cards</title>
   <link rel="stylesheet" href="index.css">
   <script src="index.js"></script>
+  <script src="https://cdn.jsdelivr.net/jsbarcode/3.6.0/JsBarcode.all.min.js"></script>
 </head>
 
 <body>
   <div class="container">
     <div class="user-information-area">
       <div class="blue-box game-id">
-        <label>GAME ID :</label>
-        <span>&nbsp;7896541230</span>
+        <label>GAME ID :</label>&nbsp;
+        <span id="gameId">7896541230</span>
       </div>
       <div class="blue-box draw-time">
         <label>DRAW TIME</label>
@@ -244,10 +245,11 @@
           <div onclick="reset()" class="clear btn">CLEAR</div>
         </div>
       </div>
-
-      <div class="print-area btn" onclick="print()">
+      
+      <div class="print-area btn" onclick="print(16)">
         <img src="../assets/images/buttons/print-btn.png" alt="Print">
       </div>
+      <img style="margin-left: -1% ; display: none;" jsbarcode-textmargin="0" id="barcode" />
     </div>
   </div>
 </body>
