@@ -7,8 +7,10 @@ let mainWindow;
 
 const createWindow = () => {
     mainWindow = new BrowserWindow({
-        width: 1020,
-        height: 600,
+        width: 1024, height: 768,
+        frame: false,
+        resizable: false,
+        fullscreen: true,
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
