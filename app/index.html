@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="index.css">
   <script src="index.js"></script>
   <script src="https://cdn.jsdelivr.net/jsbarcode/3.6.0/JsBarcode.all.min.js"></script>
+  <script src="../app/package/canvas-circular-countdown.js"></script>
 </head>
 
 <body>
@@ -39,10 +40,12 @@
 
     <div class="center-area">
       <div class="wheel-container">
-        <img class="wheel-one" src="../assets/images/wheel/wheel-one.png" alt="">
-        <img class="wheel-two my-img" src="../assets/images/wheel/wheel-two.png" alt="">
-        <img class="wheel-three" src="../assets/images/wheel/wheel-three.png" alt="">
-        <img class="wheel-four" src="../assets/images/wheel/wheel-four.png" alt="">
+        <img id="wheel-one" class="wheel-one" src="../assets/images/wheel/wheel-one.png" alt="wheel-one">
+        <img id="wheel-two" class="wheel-two" src="../assets/images/wheel/wheel-two.png" alt="wheel-two">
+        <img id="wheel-three" class="wheel-three" src="../assets/images/wheel/wheel-three.png" alt="wheel-three">
+        <img id="wheel-four" class="wheel-four" src="../assets/images/wheel/wheel-four.png" alt="wheel-four">
+        <img id="wheel-winner" class="wheel-winner" alt="winner">
+        <img id="wheel-winner-amount" class="wheel-winner-amount" alt="winner-amount">
       </div>
       <div class="cards-container">
         <div class="cards-row all-sets">
@@ -70,73 +73,73 @@
         <div class="cards-row">
           <div class="heart-ace btn" onclick="setBet(0)">
             <img src="../assets/images/cards/heart-ace.png" alt="heart-ace">
-            <span id="0">Play</span>
+            <span id="0" class="play">Play</span>
           </div>
           <div class="spade-ace btn" onclick="setBet(1)">
             <img class="spade-ace" src="../assets/images/cards/spade-ace.png" alt="spade-ace">
-            <span id="1">Play</span>
+            <span id="1" class="play">Play</span>
           </div>
           <div class="diamond-ace btn" onclick="setBet(2)">
             <img class="diamond-ace" src="../assets/images/cards/diamond-ace.png" alt="diamond-ace">
-            <span id="2">Play</span>
+            <span id="2" class="play">Play</span>
           </div>
           <div class="club-ace" onclick="setBet(3)">
             <img class="club-ace btn" src="../assets/images/cards/club-ace.png" alt="club-ace">
-            <span id="3">Play</span>
+            <span id="3" class="play">Play</span>
           </div>
         </div>
         <div class="cards-row">
           <div class="heart-king btn" onclick="setBet(4)">
             <img src="../assets/images/cards/heart-king.png" alt="heart-king">
-            <span id="4">Play</span>
+            <span id="4" class="play">Play</span>
           </div>
           <div class="spade-king btn" onclick="setBet(5)">
             <img src="../assets/images/cards/spade-king.png" alt="spade-king">
-            <span id="5">Play</span>
+            <span id="5" class="play">Play</span>
           </div>
           <div class="diamond-king btn" onclick="setBet(6)">
             <img src="../assets/images/cards/diamond-king.png" alt="diamond-king">
-            <span id="6">Play</span>
+            <span id="6" class="play">Play</span>
           </div>
           <div class="club-king btn" onclick="setBet(7)">
             <img src="../assets/images/cards/club-king.png" alt="club-king">
-            <span id="7">Play</span>
+            <span id="7" class="play">Play</span>
           </div>
         </div>
         <div class="cards-row">
           <div class="heart-queen btn" onclick="setBet(8)">
             <img src="../assets/images/cards/heart-queen.png" alt="heart-queen">
-            <span id="8">Play</span>
+            <span id="8" class="play">Play</span>
           </div>
           <div class="spade-queen btn" onclick="setBet(9)">
             <img src="../assets/images/cards/spade-queen.png" alt="spade-queen">
-            <span id="9">Play</span>
+            <span id="9" class="play">Play</span>
           </div>
           <div class="diamond-queen btn" onclick="setBet(10)">
             <img src="../assets/images/cards/diamond-queen.png" alt="diamond-queen">
-            <span id="10">Play</span>
+            <span id="10" class="play">Play</span>
           </div>
           <div class="club-queen btn" onclick="setBet(11)">
             <img src="../assets/images/cards/club-queen.png" alt="club-queen">
-            <span id="11">Play</span>
+            <span id="11" class="play">Play</span>
           </div>
         </div>
         <div class="cards-row">
           <div class="heart-joker btn" onclick="setBet(12)">
             <img src="../assets/images/cards/heart-joker.png" alt="heart-joker">
-            <span id="12">Play</span>
+            <span id="12" class="play">Play</span>
           </div>
           <div class="spade-joker btn" onclick="setBet(13)">
             <img src="../assets/images/cards/spade-joker.png" alt="spade-joker">
-            <span id="13">Play</span>
+            <span id="13" class="play">Play</span>
           </div>
           <div class="diamond-joker btn" onclick="setBet(14)">
             <img src="../assets/images/cards/diamond-joker.png" alt="diamond-joker">
-            <span id="14">Play</span>
+            <span id="14" class="play">Play</span>
           </div>
           <div class="club-joker btn" onclick="setBet(15)">
             <img src="../assets/images/cards/club-joker.png" alt="club-joker">
-            <span id="15">Play</span>
+            <span id="15" class="play">Play</span>
           </div>
         </div>
         <div class="winners-list">
@@ -184,15 +187,7 @@
       </div>
       <div class="timer-container">
         <div class="timer">
-          <svg width="137" height="137" viewBox="-17.125 -17.125 171.25 171.25" version="1.1"
-            xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
-            <circle r="58.5" cx="68.5" cy="68.5" fill="transparent" stroke="#a9a5bc" stroke-width="16px"
-              stroke-dasharray="367.38px" stroke-dashoffset="0"></circle>
-            <circle r="58.5" cx="68.5" cy="68.5" stroke="#06de19" stroke-width="16px" stroke-linecap="butt"
-              stroke-dashoffset="99px" fill="transparent" stroke-dasharray="367.38px"></circle>
-            <text x="41px" y="85px" fill="#000000" font-size="52px" font-weight="bold"
-              style="transform:rotate(90deg) translate(0px, -133px)">73</text>
-          </svg>
+          <div id="timer"></div>
         </div>
 
         <div class="all-aces btn" onclick="setMultiBets('a')">
@@ -221,7 +216,7 @@
     <div class="bottom-area">
       <div class="buttons-area">
         <div class="blue-box bet-info">
-          Place your chips
+          <span id="bet-info">Place your chips</span>
         </div>
         <div class="yellow-box-container">
           <div class="yellow-box play-count">PLAY :&nbsp;<span id="play-count"></span></div>

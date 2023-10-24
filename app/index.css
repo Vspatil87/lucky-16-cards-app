@@ -55,12 +55,13 @@ body {
 
 .draw-time {
     text-align: center;
+    line-height: 22px;
 }
 
 .time {
     display: flex;
     justify-content: center;
-    margin-top: 3px;
+    margin-top: 5px;
 }
 
 .balance {
@@ -69,7 +70,9 @@ body {
     align-items: center;
 }
 
-.close-icon {
+.close-icon,
+.account,
+.password {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -86,9 +89,81 @@ body {
 
 /* Wheel area css start */
 
-/* .my-img {
+.spin {
     animation: rotateImg 2s linear infinite;
 }
+
+.spinWheel {
+    animation: rotateImg2 2s linear infinite;
+}
+
+@keyframes rotateImg2 {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-359deg);
+    }
+}
+
+
+.dWin {
+    animation: dRotate 2s linear forwards;
+}
+
+@keyframes dRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-27deg);
+    }
+}
+
+.cWin {
+    animation: cRotate 3s linear forwards;
+}
+
+@keyframes cRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-50deg);
+    }
+}
+
+.hWin {
+    animation: hRotate 4s linear forwards;
+}
+
+@keyframes hRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-73deg);
+    }
+}
+
+.sWin {
+    animation: sRotate 5s linear forwards;
+}
+
+@keyframes sRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-97deg);
+    }
+}
+
 
 @keyframes rotateImg {
     from {
@@ -98,47 +173,230 @@ body {
     to {
         transform: rotate(359deg);
     }
-} */
-
-.wheel-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30%;
-    min-width: 30%;
-    max-width: 30%;
 }
 
-.wheel-one {
-    position: relative;
-    width: 100%;
-    z-index: 5;
-    object-fit: contain;
+.qWin {
+    animation: qRotate 2s linear forwards;
 }
 
-.wheel-two {
-    position: absolute;
-    width: calc(100% - 50px);
-    z-index: 2;
-    object-fit: contain;
-    transform: translate(-2px, 17px);
+@keyframes qRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(20deg);
+    }
 }
 
-.wheel-three {
-    position: absolute;
-    width: calc(100% - 130px);
-    transform: translate(0px, 16px);
-    z-index: 2;
-    object-fit: contain;
+.kWin {
+    animation: kRotate 3s linear forwards;
 }
 
-.wheel-four {
-    position: absolute;
-    width: calc(100% - 220px);
-    z-index: 2;
-    transform: translate(-3px, 16px);
-    object-fit: contain;
+@keyframes kRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(40deg);
+    }
+}
+
+.aWin {
+    animation: aRotate 4s linear forwards;
+}
+
+@keyframes aRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(65deg);
+    }
+}
+
+.jWin {
+    animation: jRotate 5s linear forwards;
+}
+
+@keyframes jRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(85deg);
+    }
+}
+
+@media screen and (min-width: 1020px) and (max-width: 1300px) {
+    .wheel-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30%;
+        min-width: 30%;
+        max-width: 30%;
+    }
+
+    .wheel-one {
+        position: absolute;
+        z-index: 5;
+        width: 350px;
+        object-fit: contain;
+    }
+
+    .wheel-two {
+        position: absolute;
+        width: 290px;
+        z-index: 2;
+        object-fit: contain;
+        margin-top: 21px;
+        margin-left: -2px;
+        -webkit-transition: -webkit-transform 2s ease-out;
+    }
+
+    .wheel-three {
+        position: absolute;
+        width: 190px;
+        z-index: 2;
+        margin-left: 1px;
+        margin-top: 22px;
+        object-fit: contain;
+    }
+
+    .wheel-four {
+        position: absolute;
+        width: 80px;
+        z-index: 2;
+        transform: translate(0px, 22px);
+        object-fit: contain;
+    }
+
+    .wheel-winner {
+        position: absolute;
+        width: 40px;
+        z-index: 2;
+        transform: translate(0px, 16px);
+        object-fit: contain;
+        visibility: hidden;
+    }
+
+    .wheel-winner-amount {
+        position: absolute;
+        width: 15px;
+        z-index: 2;
+        transform: translate(0px, 45px);
+        object-fit: contain;
+        visibility: hidden;
+    }
+
+    .buttons-area {
+        width: 30%;
+        min-width: 30%;
+        max-width: 30%;
+        display: flex;
+        flex-direction: column;
+        margin-right: 5px;
+        justify-content: center;
+    }
+
+    .all-aces>.all,
+    .all-kings>.all,
+    .all-queens>.all,
+    .all-jokers>.all {
+        position: absolute;
+        top: 5%;
+        font-family: Poppins-Medium;
+        font-size: var(--sFontSize);
+    }
+}
+
+@media screen and (min-width: 1300px) {
+    .wheel-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 35%;
+        min-width: 35%;
+        max-width: 35%;
+    }
+
+    .wheel-one {
+        position: absolute;
+        z-index: 5;
+        width: 600px;
+        object-fit: contain;
+    }
+
+    .wheel-two {
+        position: absolute;
+        width: 510px;
+        z-index: 2;
+        object-fit: contain;
+        margin-top: 35px;
+        margin-left: -5px;
+        -webkit-transition: -webkit-transform 2s ease-out;
+    }
+
+    .wheel-three {
+        position: absolute;
+        width: 380px;
+        z-index: 2;
+        margin-left: -2px;
+        margin-top: 36px;
+        object-fit: contain;
+    }
+
+    .wheel-four {
+        position: absolute;
+        width: 200px;
+        z-index: 2;
+        transform: translate(0px, 38px);
+        object-fit: contain;
+    }
+
+    .wheel-winner {
+        position: absolute;
+        width: 100px;
+        z-index: 2;
+        transform: translate(0px, 25px);
+        object-fit: contain;
+        visibility: hidden;
+    }
+
+    .wheel-winner-amount {
+        position: absolute;
+        width: 40px;
+        z-index: 2;
+        transform: translate(0px, 90px);
+        object-fit: contain;
+        visibility: hidden;
+    }
+
+    .buttons-area {
+        width: 35%;
+        min-width: 35%;
+        max-width: 35%;
+        display: flex;
+        flex-direction: column;
+        margin-right: 5px;
+        justify-content: center;
+    }
+
+    .all-aces>.all,
+    .all-kings>.all,
+    .all-queens>.all,
+    .all-jokers>.all {
+        position: absolute;
+        top: 8%;
+        font-family: Poppins-Medium;
+        font-size: var(--sFontSize);
+    }
 }
 
 /* Wheel area css end */
@@ -447,7 +705,7 @@ body {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    min-height: 80px;
+    min-height: 70px;
     max-height: 100px;
     border: 2px solid var(--blackColor);
     background: #002F77;
@@ -496,19 +754,29 @@ body {
     flex-direction: column;
     align-items: start;
     width: 20%;
-    max-height: calc(100% - 80px);
+    max-height: calc(100% - 140px);
+    min-height: calc(100% - 90px);
 }
 
 .timer {
     max-height: calc(100% / 5);
-    margin-left: 10%;
-    margin-bottom: 10px;
+    min-height: calc(100% / 5);
+    margin-left: 15%;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
 }
 
-svg {
+canvas {
+    border: 2px solid #FDEE23;
+    border-radius: 60px;
+    object-fit: contain;
+}
+
+/* svg {
     object-fit: contain;
     height: 100%;
-}
+} */
 
 .all-aces,
 .all-kings,
@@ -519,6 +787,7 @@ svg {
     justify-content: center;
     align-items: center;
     min-height: calc(100% / 6);
+    max-height: calc(100% / 6);
     margin-bottom: 10px;
     object-fit: contain;
     margin-left: 10%;
@@ -545,31 +814,11 @@ svg {
     color: var(--blackColor);
 }
 
-.all-aces>.all,
-.all-kings>.all,
-.all-queens>.all,
-.all-jokers>.all {
-    position: absolute;
-    top: 3px;
-    font-family: Poppins-Medium;
-    font-size: var(--sFontSize);
-}
-
 /* Bottom area starts */
 .bottom-area {
     display: flex;
     width: 100%;
     margin-top: 10px;
-}
-
-.buttons-area {
-    width: 30%;
-    min-width: 30%;
-    max-width: 30%;
-    display: flex;
-    flex-direction: column;
-    margin-right: 5px;
-    justify-content: center;
 }
 
 .bet-info {
@@ -635,6 +884,8 @@ input::placeholder {
     display: flex;
     justify-content: space-between;
     height: 40px;
+    width: 95%;
+    margin: auto;
 }
 
 .btn-container>div {
