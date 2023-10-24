@@ -10,7 +10,7 @@ let { remote } = require("electron");
 const url = require("url");
 const fs = require("fs");
 const EventEmitter = require("events");
-class MyEmitter extends EventEmitter {}
+class MyEmitter extends EventEmitter { }
 const myEmitter = new MyEmitter();
 myEmitter.setMaxListeners(Infinity);
 const { PosPrinter } = require("electron-pos-printer");
