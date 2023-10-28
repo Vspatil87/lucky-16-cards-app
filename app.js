@@ -20,7 +20,7 @@ const path = require("path");
 const io = require("socket.io-client");
 require("events").EventEmitter.defaultMaxListeners = Infinity;
 
-var socket = io.connect("http://localhost:3001");
+var socket = io.connect("http://103.154.233.156:7013");
 var moment = require("moment");
 const { exec } = require("child_process");
 process.env.NODE_ENV = "development";
@@ -89,6 +89,25 @@ socket.on("disconnect", function () {
 socket.on("confirmbet", function (data) {
   socket.emit("confirmbet", data);
 });
+ipcMain.on("getLastWinners", function () {
+  socket.emit("getLastWinners");
+});
+socket.on("lastWinnerReply", function (data) {
+  mainWindow.webContents.send("lastWinnerReply", data);
+});
+
+ipcMain.on("getAccountData", function (e, data) {
+  socket.emit("getAccountData", data);
+});
+
+socket.on("showAccountData", function (resultData) {
+  mainWindow.webContents.send("showAcccountData", resultData);
+});
+
+ipcMain.on("claimTicket", function (e, ticketId) {
+  socket.emit("claimTicket", ticketId);
+});
+
 var currentUserId = 18;
 
 /* --- Curent Timer send ---- */
@@ -129,6 +148,9 @@ userId = ipcMain.on("userData", function () {
 });
 socket.on("userDataReply", function (dataReply) {
   mainWindow.webContents.send("userDataReply", dataReply);
+});
+socket.on("claimReply", function (claimReply) {
+  mainWindow.webContents.send("userDataReply", claimReply);
 });
 
 // ConfirmBet
@@ -192,4 +214,11 @@ ipcMain.on("barcode_image", function (event, barimage_data) {
       });
     }
   }
+});
+
+ipcMain.on("getLastTickets", function (e, data) {
+  socket.emit("getLastTickets", data);
+});
+socket.on("reprintDataReply", function (reprintData) {
+  mainWindow.webContents.send("reprintData", reprintData);
 });

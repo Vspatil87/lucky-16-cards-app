@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lucky 16 Cards</title>
   <link rel="stylesheet" href="index.css">
-  <script src="index.js"></script>
   <script src="https://cdn.jsdelivr.net/jsbarcode/3.6.0/JsBarcode.all.min.js"></script>
   <script src="../app/package/canvas-circular-countdown.js"></script>
 </head>
@@ -27,7 +26,7 @@
         <label>BALANCE :&nbsp;</label>
         <span id="balance">15000</span>
       </div>
-      <div class="blue-box account btn">
+      <div id="myBtn" class="blue-box account btn">
         <label class="btn">ACCOUNT</label>
       </div>
       <div class="blue-box password btn">
@@ -220,7 +219,7 @@
         </div>
         <div class="yellow-box-container">
           <div class="yellow-box play-count">PLAY :&nbsp;<span id="play-count"></span></div>
-          <input type="text" class="yellow-box barcode" placeholder="BARCODE">
+          <input type="text" class="yellow-box barcode" placeholder="BARCODE" id="ticketValue">
         </div>
       </div>
 
@@ -247,6 +246,103 @@
       <img style="margin-left: -1% ; display: none;" jsbarcode-textmargin="0" id="barcode" />
     </div>
   </div>
+
+
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Account</span>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="account-buttons">
+          <button class="counter-sale-button">Counter Sale</button>
+          <button class="net-to-pay-button">Net to Pay</button>
+        </div>
+        <div class="account-date-container">
+          <span class="from-text">From</span>
+          <input class="select-from" type="date" name="" id="selectfrom">
+          <span class="to-text">To</span>
+          <input class="select-to" type="date" name="" id="selectto">
+          <button class="submit">Submit</button>
+          <button class="cancel">Cancel</button>
+          <button class="modal-print">Print</button>
+        </div>
+        <div class="account-details-container">
+          <div class="account-table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Sr.No</th>
+                  <th>Date</th>
+                  <th>Play</th>
+                  <th>Win</th>
+                  <th>Point</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>25-10-2023</td>
+                  <td>10</td>
+                  <td>10</td>
+                  <td>10</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="account-details">
+            <div class="modal-game-id">
+              <span class="game-id-title">Game ID : <span class="game-id-value">Value</span></span>
+            </div>
+            <div class="counter-sale-text">
+              <span>Counter Sale</span>
+            </div>
+            <div class="retailer-code">
+              <span class="reatiler-code-text">Reatiler Code : <span class="reatiler-code-value">Value</span></span>
+            </div>
+            <div class="counter-sale-table">
+              <div class="counter-sale-header">
+                <div class="header-container">
+                  <span class="details-from-date from-text">25-10-2023</span>
+                  <span class="details-to-text to-text">To</span>
+                  <span class="details-to-date to-text">30-10-2023</span>
+                </div>
+              </div>
+              <div class="counter-sale-body">
+                <div class="body-row">
+                  <span class="row-title">Play</span>
+                  <span class="row-value">Value</span>
+                </div>
+
+                <div class="body-row">
+                  <span class="row-title">Win</span>
+                  <span class="row-value">Value</span>
+                </div>
+              </div>
+              <div class="counter-sale-footer">
+                <div class="body-row">
+                  <span class="row-title">Outstanding</span>
+                  <span class="row-value">Value</span>
+                </div>
+              </div>
+            </div>
+            <div class="server-timer-container">
+              <span class="server-title">Server Time : </span>
+              <span class="server-value">Value</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="index.js"></script>
+  <script src="Account.js"></script>
 </body>
 
 </html>

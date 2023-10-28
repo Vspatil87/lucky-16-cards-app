@@ -35,58 +35,57 @@ let lastwinners = {
   betWin: ["0", "2X", "5X", "1X", "8X"],
 };
 lastWinImages = [
-  '../assets/images/last-win-cards/0.png',
-  '../assets/images/last-win-cards/1.png',
-  '../assets/images/last-win-cards/2.png',
-  '../assets/images/last-win-cards/3.png',
-  '../assets/images/last-win-cards/4.png',
-  '../assets/images/last-win-cards/5.png',
-  '../assets/images/last-win-cards/6.png',
-  '../assets/images/last-win-cards/7.png',
-  '../assets/images/last-win-cards/8.png',
-  '../assets/images/last-win-cards/9.png',
-  '../assets/images/last-win-cards/10.png',
-  '../assets/images/last-win-cards/11.png',
-  '../assets/images/last-win-cards/12.png',
-  '../assets/images/last-win-cards/13.png',
-  '../assets/images/last-win-cards/14.png',
-  '../assets/images/last-win-cards/15.png',
+  "../assets/images/last-win-cards/0.png",
+  "../assets/images/last-win-cards/1.png",
+  "../assets/images/last-win-cards/2.png",
+  "../assets/images/last-win-cards/3.png",
+  "../assets/images/last-win-cards/4.png",
+  "../assets/images/last-win-cards/5.png",
+  "../assets/images/last-win-cards/6.png",
+  "../assets/images/last-win-cards/7.png",
+  "../assets/images/last-win-cards/8.png",
+  "../assets/images/last-win-cards/9.png",
+  "../assets/images/last-win-cards/10.png",
+  "../assets/images/last-win-cards/11.png",
+  "../assets/images/last-win-cards/12.png",
+  "../assets/images/last-win-cards/13.png",
+  "../assets/images/last-win-cards/14.png",
+  "../assets/images/last-win-cards/15.png",
 ];
 winnerImages = [
-  '../assets/images/win-cards/0.png',
-  '../assets/images/win-cards/1.png',
-  '../assets/images/win-cards/2.png',
-  '../assets/images/win-cards/3.png',
-  '../assets/images/win-cards/4.png',
-  '../assets/images/win-cards/5.png',
-  '../assets/images/win-cards/6.png',
-  '../assets/images/win-cards/7.png',
-  '../assets/images/win-cards/8.png',
-  '../assets/images/win-cards/9.png',
-  '../assets/images/win-cards/10.png',
-  '../assets/images/win-cards/11.png',
-  '../assets/images/win-cards/12.png',
-  '../assets/images/win-cards/13.png',
-  '../assets/images/win-cards/14.png',
-  '../assets/images/win-cards/15.png',
+  "../assets/images/win-cards/0.png",
+  "../assets/images/win-cards/1.png",
+  "../assets/images/win-cards/2.png",
+  "../assets/images/win-cards/3.png",
+  "../assets/images/win-cards/4.png",
+  "../assets/images/win-cards/5.png",
+  "../assets/images/win-cards/6.png",
+  "../assets/images/win-cards/7.png",
+  "../assets/images/win-cards/8.png",
+  "../assets/images/win-cards/9.png",
+  "../assets/images/win-cards/10.png",
+  "../assets/images/win-cards/11.png",
+  "../assets/images/win-cards/12.png",
+  "../assets/images/win-cards/13.png",
+  "../assets/images/win-cards/14.png",
+  "../assets/images/win-cards/15.png",
 ];
 xImages = [
-  '../assets/images/1x-to-10x/1.png',
-  '../assets/images/1x-to-10x/2.png',
-  '../assets/images/1x-to-10x/3.png',
-  '../assets/images/1x-to-10x/4.png',
-  '../assets/images/1x-to-10x/5.png',
-  '../assets/images/1x-to-10x/6.png',
-  '../assets/images/1x-to-10x/7.png',
-  '../assets/images/1x-to-10x/8.png',
-  '../assets/images/1x-to-10x/9.png',
-  '../assets/images/1x-to-10x/10.png',
+  "../assets/images/1x-to-10x/1.png",
+  "../assets/images/1x-to-10x/2.png",
+  "../assets/images/1x-to-10x/3.png",
+  "../assets/images/1x-to-10x/4.png",
+  "../assets/images/1x-to-10x/5.png",
+  "../assets/images/1x-to-10x/6.png",
+  "../assets/images/1x-to-10x/7.png",
+  "../assets/images/1x-to-10x/8.png",
+  "../assets/images/1x-to-10x/9.png",
+  "../assets/images/1x-to-10x/10.png",
 ];
-
 
 window.onload = () => {
   ipcRenderer.send("userData");
-
+  ipcRenderer.send("getLastWinners");
   // getTime();
   getLastWinners();
   startTimer();
@@ -139,6 +138,22 @@ function currentDraw() {
   return formattedTime;
 }
 
+document.addEventListener("keypress", function (event) {
+  if (event.keyCode === 13 || event.which === 13) {
+    // Enter key was pressed
+    let ticketId = document.getElementById("ticketValue").value;
+    console.log(ticketId);
+    if (ticketId.length == 8) {
+      ipcRenderer.send("claimTicket", { ticketId, username });
+      document.getElementById("ticketValue").value = "";
+    }
+  }
+});
+
+ipcRenderer.on("lastWinnerReply", function (event, data) {
+  // console.log("userData", data);
+  console.log("last winner data", data);
+});
 ipcRenderer.on("timer", function (event, data) {
   // console.log("userData", data);
 });
@@ -152,6 +167,7 @@ ipcRenderer.on("userDataReply", function (event, data) {
   console.log("userData", data);
   document.getElementById("gameId").innerText = " " + data.username;
   document.getElementById("balance").innerText = " " + data.balance;
+  userBalance = data.balance;
   aId = data.aId;
   mId = data.mId;
   dId = data.dId;
@@ -327,6 +343,18 @@ function double() {
     return bet;
   });
 }
+
+async function openreprintModal() {
+  const drawDate = moment().format("YYYY-MM-DD");
+  const currentDraww = currentDraw();
+  ipcRenderer.send("getLastTickets", { currentDraww, drawDate, username });
+  console.log(reprintModal);
+  reprintModal.style.display = "block";
+}
+
+ipcRenderer.on("reprintData", function (e, reprintData) {
+  console.log(reprintData);
+});
 
 function reprint() { }
 
@@ -706,78 +734,82 @@ async function print_the_data(printer_data, f = 0) {
   }
 }
 
-// Timer 
+// Timer
 function startTimer() {
-  canvasTimer = new CanvasCircularCountdown(document.getElementById('timer'), {
-    "duration": 20000,
-    "elapsedTime": 0,
-    "throttle": 100,
-    "clockwise": true,
-    "radius": 45,
-    "progressBarWidth": 12,
-    "progressBarOffset": 0,
-    "circleBackgroundColor": "#111111",
-    "emptyProgressBarBackgroundColor": "#C2BCDA",
-    "filledProgressBarBackgroundColor": pickColorByPercentage,
-    "showCaption": true,
-    "captionColor": "#ffffff",
-    "captionFont": "20px Poppins",
-    captionText: (percentage, time) => {
-      return (((time.remaining % 60000) / 1000).toFixed(0));
+  canvasTimer = new CanvasCircularCountdown(
+    document.getElementById("timer"),
+    {
+      duration: 20000,
+      elapsedTime: 0,
+      throttle: 100,
+      clockwise: true,
+      radius: 45,
+      progressBarWidth: 12,
+      progressBarOffset: 0,
+      circleBackgroundColor: "#111111",
+      emptyProgressBarBackgroundColor: "#C2BCDA",
+      filledProgressBarBackgroundColor: pickColorByPercentage,
+      showCaption: true,
+      captionColor: "#ffffff",
+      captionFont: "20px Poppins",
+      captionText: (percentage, time) => {
+        return ((time.remaining % 60000) / 1000).toFixed(0);
+      },
+    },
+    function onTimerRunning(percentage, time, instance) {
+      let timeRemaining = ((time.remaining % 60000) / 1000).toFixed(0);
+      if (timeRemaining < 10) {
+        disableGame();
+      }
+      if (timeRemaining < 1) {
+        instance.stop();
+        spin();
+      }
     }
-  }, function onTimerRunning(percentage, time, instance) {
-    let timeRemaining = ((time.remaining % 60000) / 1000).toFixed(0);
-    if (timeRemaining < 10) {
-      disableGame();
-    }
-    if (timeRemaining < 1) {
-      instance.stop();
-      spin();
-    }
-  }).start();
+  ).start();
 }
 
 const pickColorByPercentage = (percentage, time) => {
   switch (true) {
     case percentage >= 60:
-      return '#06DE19'; // green
+      return "#06DE19"; // green
     case percentage >= 25 && percentage < 60:
-      return '#ffc107'; // orange
+      return "#ffc107"; // orange
     default:
-      return '#ff0000'; // red
+      return "#ff0000"; // red
   }
-}
+};
 
 function disableGame() {
-  let elements = document.getElementsByClassName('btn');
+  let elements = document.getElementsByClassName("btn");
   for (let i = 0; i < elements.length; i++) {
-    elements[i].style.pointerEvents = 'none';
+    elements[i].style.pointerEvents = "none";
   }
   hideText(true);
 }
 
 function enableGame() {
   reset();
-  let elements = document.getElementsByClassName('btn');
+  let elements = document.getElementsByClassName("btn");
   for (let i = 0; i < elements.length; i++) {
-    elements[i].style.pointerEvents = 'visible';
+    elements[i].style.pointerEvents = "visible";
   }
   hideText(false);
 }
 
 function hideText(hide) {
-  let elements = document.getElementsByClassName('play');
+  let elements = document.getElementsByClassName("play");
   if (hide) {
-    document.getElementById('bet-info').style.visibility = 'hidden';
+    document.getElementById("bet-info").style.visibility = "hidden";
     for (let i = 0; i < elements.length; i++) {
-      if (elements[i].innerText === 'Play') {
-        elements[i].style.visibility = 'hidden';
+      if (elements[i].innerText === "Play") {
+        elements[i].style.visibility = "hidden";
       }
     }
   } else {
-    document.getElementById('bet-info').style.visibility = 'visible';
+    document.getElementById("bet-info").style.visibility = "visible";
     for (let i = 0; i < elements.length; i++) {
-      elements[i].style.visibility = 'visible';
+      elements[i].style.visibility = "visible";
     }
   }
 }
@@ -786,8 +818,8 @@ function hideText(hide) {
 // Q = 20, k = 40, A = 65, J = 85
 // club = -50, heart = -73, spade = -97, diamond = -2
 function spin() {
-  let wheelTwo = document.getElementById('wheel-two');
-  let wheelThree = document.getElementById('wheel-three');
+  let wheelTwo = document.getElementById("wheel-two");
+  let wheelThree = document.getElementById("wheel-three");
   wheelTwo.classList.add("spin");
   wheelTwo.classList.remove("aWin");
   wheelTwo.classList.remove("kWin");
@@ -812,10 +844,10 @@ function spin() {
 }
 
 function stopWheelTwo(winner) {
-  let wheelTwo = document.getElementById('wheel-two');
-  wheelTwo.style.animationFillMode = 'forwards';
-  wheelTwo.style.animationTimingFunction = 'ease';
-  console.log('a == ', winner);
+  let wheelTwo = document.getElementById("wheel-two");
+  wheelTwo.style.animationFillMode = "forwards";
+  wheelTwo.style.animationTimingFunction = "ease";
+  console.log("a == ", winner);
   if (winner < 4) {
     wheelTwo.classList.add("aWin");
   } else if (winner >= 4 && winner < 8) {
@@ -828,10 +860,10 @@ function stopWheelTwo(winner) {
 }
 
 function stopWheelThree(winner, winnerAmount) {
-  let wheelThree = document.getElementById('wheel-three');
+  let wheelThree = document.getElementById("wheel-three");
   wheelThree.classList.remove("spinWheel");
-  wheelThree.style.animationFillMode = 'forwards';
-  wheelThree.style.animationTimingFunction = 'ease';
+  wheelThree.style.animationFillMode = "forwards";
+  wheelThree.style.animationTimingFunction = "ease";
   if (winner === 0 || winner === 4 || winner === 8 || winner === 12) {
     wheelThree.classList.add("hWin");
     setTimeout(() => {
@@ -859,25 +891,52 @@ function stopWheelThree(winner, winnerAmount) {
 }
 
 function setWinner(winner, winnerAmount) {
-  let wheelTwo = document.getElementById('wheel-two');
-  let wheelThree = document.getElementById('wheel-three');
-  let wheelWinner = document.getElementById('wheel-winner');
-  let wheelWinnerAmount = document.getElementById('wheel-winner-amount');
-  wheelWinner.style.visibility = 'visible';
+  let wheelTwo = document.getElementById("wheel-two");
+  let wheelThree = document.getElementById("wheel-three");
+  let wheelWinner = document.getElementById("wheel-winner");
+  let wheelWinnerAmount = document.getElementById("wheel-winner-amount");
+  wheelWinner.style.visibility = "visible";
   wheelWinner.src = winnerImages[winner];
-  wheelWinnerAmount.style.visibility = 'visible';
+  wheelWinnerAmount.style.visibility = "visible";
   wheelWinnerAmount.src = xImages[winnerAmount];
   setTimeout(() => {
-    wheelTwo.style.removeProperty('animation-fill-mode');
-    wheelTwo.style.removeProperty('animation-timing-function');
+    wheelTwo.style.removeProperty("animation-fill-mode");
+    wheelTwo.style.removeProperty("animation-timing-function");
     wheelTwo.classList.remove("spin");
-    wheelThree.style.removeProperty('animation-fill-mode');
-    wheelThree.style.removeProperty('animation-timing-function');
+    wheelThree.style.removeProperty("animation-fill-mode");
+    wheelThree.style.removeProperty("animation-timing-function");
     wheelThree.classList.remove("spinWheel");
-    wheelWinner.style.visibility = 'hidden';
-    wheelWinnerAmount.style.visibility = 'hidden';
+    wheelWinner.style.visibility = "hidden";
+    wheelWinnerAmount.style.visibility = "hidden";
     canvasTimer.reset();
     canvasTimer.start();
     enableGame();
   }, 2000);
+}
+
+// Modal Popup
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function () {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function () {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
 }

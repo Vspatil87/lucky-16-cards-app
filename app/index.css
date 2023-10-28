@@ -918,3 +918,283 @@ input::placeholder {
 .btn {
     cursor: pointer;
 }
+
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 100;
+    /* Sit on top */
+    padding-top: 100px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+/* Modal Header */
+.modal-header {
+    min-height: 40px;
+    padding: 2px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Poppins-SemiBold;
+    font-size: var(--lFontSize);
+    color: var(--whiteColor);
+    background: #411A5D;
+    border-bottom: 1px solid #c6c6c6;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 10px;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+}
+
+.account-buttons {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.counter-sale-button {
+    background: #411a5dc4;
+    border: none;
+    border-radius: 2px;
+    min-height: 25px;
+    color: var(--whiteColor);
+    font-size: var(--mFontSize);
+    font-family: Poppins-Medium;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.net-to-pay-button {
+    border: none;
+    border-radius: 2px;
+    min-height: 25px;
+    color: var(--blackColor);
+    font-size: var(--mFontSize);
+    font-family: Poppins-Medium;
+    cursor: pointer;
+}
+
+.account-date-container {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.from-text,
+.to-text {
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-family: Poppins-SemiBold;
+}
+
+.select-from,
+.select-to {
+    margin-right: 5px;
+    border: 1px solid #c6c6c6;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    font-family: Poppins-Medium;
+    font-size: 12px;
+}
+
+input[type=date]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
+
+button:focus {
+    outline: none;
+}
+
+.submit {
+    margin: 0 5px;
+    background-color: #ED9309;
+    border: 2px solid #DF8105;
+    font-size: 14px;
+    font-family: Poppins-Medium;
+    border-radius: 3px;
+    color: var(--blackColor);
+    cursor: pointer;
+}
+
+.cancel {
+    margin-right: 5px;
+    background-color: #ed3909d6;
+    border: 2px solid #ed0909;
+    font-size: 14px;
+    font-family: Poppins-Medium;
+    border-radius: 3px;
+    color: var(--blackColor);
+    cursor: pointer;
+}
+
+.account-details-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.account-table-container {
+    width: 67%;
+    border: 1px solid #888;
+    border-radius: 3px;
+    padding: 3px;
+}
+
+table {
+    width: 100%;
+    border: 1px solid #9e9a9a;
+    border-collapse: collapse;
+}
+
+tr {
+    border-bottom: 1px solid #9e9a9a;
+}
+
+th,
+td {
+    text-align: start;
+    border-right: 1px solid #9e9a9a;
+}
+
+.account-details {
+    width: 30%;
+    border: 1px solid #888;
+    border-radius: 3px;
+    padding: 3px 5px;
+}
+
+.modal-game-id,
+.counter-sale-text,
+.retailer-code {
+    margin-bottom: 5px;
+}
+
+.counter-sale-header {
+    margin-bottom: 5px;
+    border-bottom: 2px solid #313131;
+}
+
+.header-container {
+    display: flex;
+    width: 100%;
+}
+
+.details-from-date,
+.details-to-date {
+    width: 40%;
+    font-family: Poppins-Medium;
+}
+
+.details-to-text {
+    width: 10%;
+    font-family: Poppins-Medium;
+}
+
+.counter-sale-body {
+    margin-bottom: 5px;
+    border-bottom: 2px solid #313131;
+}
+
+.body-row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 5px;
+    font-family: Poppins-SemiBold;
+}
+
+.row-title {
+    width: 40%;
+    margin-right: 5px;
+}
+
+.counter-sale-footer {
+    margin-bottom: 5px;
+}
+
+.server-timer-container {
+    display: flex;
+    width: 100%;
+}
+
+.server-title {
+    width: 40%;
+}
+
+.modal-print {
+    margin-right: 5px;
+    background-color: #411a5d99;
+    border: 2px solid #5d446ec4;
+    font-size: 14px;
+    font-family: Poppins-Medium;
+    border-radius: 3px;
+    color: var(--blackColor);
+    cursor: pointer;
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* The Close Button */
+.close {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--whiteColor);
+    float: right;
+    font-size: var(--xlFontSize);
+    font-weight: bold;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+}
+
+.close:hover,
+.close:focus {
+    background: red;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
