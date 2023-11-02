@@ -17,6 +17,30 @@
     src: url(../assets/Fonts/Poppins-SemiBold.ttf);
 }
 
+@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+@keyframes popupAnimatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: calc(33% - 100px);
+        opacity: 1
+    }
+}
+
 body {
     background-image: url('../assets/images/background/background-image.jpg');
     background-repeat: no-repeat;
@@ -854,11 +878,17 @@ canvas {
     text-align: center;
 }
 
+input {
+    font-family: Poppins-Medium;
+    font-size: var(--lFontSize);
+    color: var(--blackColor);
+}
+
 input::placeholder {
     font-family: Poppins-SemiBold;
     font-size: var(--xlFontSize);
     color: var(--blackColor);
-    transform: translateY(5px);
+    transform: translateY(3px);
 }
 
 .coins-area {
@@ -960,7 +990,9 @@ input::placeholder {
 
 /* Modal Body */
 .modal-body {
+    max-height: 700px;
     padding: 10px;
+    overflow: auto;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--blackColor);
@@ -984,6 +1016,7 @@ input::placeholder {
 }
 
 .net-to-pay-button {
+    background: #DDDDDD;
     border: none;
     border-radius: 2px;
     min-height: 25px;
@@ -1056,7 +1089,7 @@ button:focus {
 }
 
 .account-table-container {
-    width: 67%;
+    width: 60%;
     border: 1px solid #888;
     border-radius: 3px;
     padding: 3px;
@@ -1075,11 +1108,12 @@ tr {
 th,
 td {
     text-align: start;
+    padding: 0 5px;
     border-right: 1px solid #9e9a9a;
 }
 
 .account-details {
-    width: 30%;
+    width: 37%;
     border: 1px solid #888;
     border-radius: 3px;
     padding: 3px 5px;
@@ -1108,7 +1142,7 @@ td {
 }
 
 .details-to-text {
-    width: 10%;
+    width: 15%;
     font-family: Poppins-Medium;
 }
 
@@ -1122,6 +1156,11 @@ td {
     width: 100%;
     margin-bottom: 5px;
     font-family: Poppins-SemiBold;
+}
+
+.commission,
+.net-to-pay {
+    display: none;
 }
 
 .row-title {
@@ -1156,6 +1195,7 @@ td {
 /* Modal Content */
 .modal-content {
     position: relative;
+    min-height: 300px;
     background-color: #fefefe;
     margin: auto;
     padding: 0;
@@ -1187,14 +1227,122 @@ td {
     cursor: pointer;
 }
 
-@keyframes animatetop {
-    from {
-        top: -300px;
-        opacity: 0
-    }
+.print-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0;
+}
 
-    to {
-        top: 0;
-        opacity: 1
-    }
+.modal-reprint {
+    background-color: #411a5d99;
+    border: 2px solid #5d446ec4;
+    font-size: 14px;
+    font-family: Poppins-Medium;
+    border-radius: 3px;
+    color: var(--blackColor);
+    cursor: pointer;
+    height: 23px;
+    line-height: 14px;
+}
+
+/* Winning Popup Css */
+/* The Popup (background) */
+.popup {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 100;
+    /* Sit on top */
+    padding-top: 100px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+/* popup Content */
+.popup-content {
+    position: relative;
+    min-height: 200px;
+    width: 500px;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    top: calc(33% - 100px);
+    border: 1px solid gold;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    animation-name: popupAnimatetop;
+    animation-duration: 0.4s;
+}
+
+/* popup Body */
+.popup-body {
+    border: 1px solid gold;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: Poppins-Medium;
+    font-size: var(--mFontSize);
+    color: var(--blackColor);
+    min-height: 180px;
+    background: azure;
+    background: red;
+    background: rgb(195, 185, 34);
+    background: radial-gradient(circle, rgba(195, 185, 34, 1) 0%, rgba(65, 26, 93, 1) 100%);
+}
+
+/* popup title */
+.popup-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Poppins-SemiBold;
+    font-size: var(--lFontSize);
+    color: var(--whiteColor);
+}
+
+/* The Close Button */
+.popup-close {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: gold;
+    float: right;
+    font-size: var(--xlFontSize);
+    font-weight: bold;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+}
+
+.popup-close:hover,
+.popup-close:focus {
+    /* background: red; */
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.popup-body-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    font-size: var(--xlFontSize);
+    color: var(--blackColor);
+}
+
+.win-amount {
+    text-align: center;
+    font-family: Poppins-SemiBold;
 }

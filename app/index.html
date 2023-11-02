@@ -26,7 +26,7 @@
         <label>BALANCE :&nbsp;</label>
         <span id="balance">15000</span>
       </div>
-      <div id="myBtn" class="blue-box account btn">
+      <div id="account" class="blue-box account btn">
         <label class="btn">ACCOUNT</label>
       </div>
       <div class="blue-box password btn">
@@ -144,7 +144,7 @@
         <div class="winners-list">
           <div class="last-win-conatiner" style="width: calc(100% / 7);">
             <img class="last-win-images">
-            <div class="last-win-box">1X</div>
+            <div class="last-win-box"></div>
           </div>
           <div class="last-win-conatiner">
             <img class="last-win-images">
@@ -235,7 +235,7 @@
         <div class="btn-container">
           <div onclick="rebet()" class="rebet btn">REBET</div>
           <div onclick="double()" class="double btn">DOUBLE</div>
-          <div onclick="reprint()" class="reprint btn">REPRINT</div>
+          <div class="reprint btn" id="reprint">REPRINT</div>
           <div onclick="reset()" class="clear btn">CLEAR</div>
         </div>
       </div>
@@ -248,27 +248,30 @@
   </div>
 
 
-  <!-- The Modal -->
-  <div id="myModal" class="modal">
+  <!-- Account Modal -->
+  <div id="accountModal" class="modal">
 
-    <!-- Modal content -->
+    <!-- Account Modal content -->
     <div class="modal-content">
+      <!-- Modal Header -->
       <div class="modal-header">
         <span>Account</span>
         <span class="close">&times;</span>
       </div>
+      <!-- Modal Body -->
       <div class="modal-body">
         <div class="account-buttons">
-          <button class="counter-sale-button">Counter Sale</button>
-          <button class="net-to-pay-button">Net to Pay</button>
+          <button id="counter-sale-button" class="counter-sale-button" onclick="toggleAccountTab(1)">Counter
+            Sale</button>
+          <button id="net-to-pay-button" class="net-to-pay-button" onclick="toggleAccountTab(2)">Net to Pay</button>
         </div>
         <div class="account-date-container">
           <span class="from-text">From</span>
-          <input class="select-from" type="date" name="" id="selectfrom">
+          <input class="select-from" type="date" name="" id="select-from">
           <span class="to-text">To</span>
-          <input class="select-to" type="date" name="" id="selectto">
-          <button class="submit">Submit</button>
-          <button class="cancel">Cancel</button>
+          <input class="select-to" type="date" name="" id="select-to">
+          <button class="submit" onclick="getAccountDataForCustomDates()">Submit</button>
+          <button class="cancel" onclick="resetAccountDates()">Cancel</button>
           <button class="modal-print">Print</button>
         </div>
         <div class="account-details-container">
@@ -280,61 +283,115 @@
                   <th>Date</th>
                   <th>Play</th>
                   <th>Win</th>
-                  <th>Point</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>25-10-2023</td>
-                  <td>10</td>
-                  <td>10</td>
-                  <td>10</td>
-                </tr>
-              </tbody>
+              <tbody id="account-table-body"></tbody>
             </table>
           </div>
           <div class="account-details">
             <div class="modal-game-id">
-              <span class="game-id-title">Game ID : <span class="game-id-value">Value</span></span>
+              <span class="game-id-title">Game ID : <span class="game-id-value" id="game-id-value"></span></span>
             </div>
             <div class="counter-sale-text">
               <span>Counter Sale</span>
             </div>
             <div class="retailer-code">
-              <span class="reatiler-code-text">Reatiler Code : <span class="reatiler-code-value">Value</span></span>
+              <span class="reatiler-code-text">Reatiler Code : <span class="reatiler-code-value"
+                  id="reatiler-code-value"></span></span>
             </div>
             <div class="counter-sale-table">
               <div class="counter-sale-header">
                 <div class="header-container">
-                  <span class="details-from-date from-text">25-10-2023</span>
+                  <span id="details-from-date" class="details-from-date from-text"></span>
                   <span class="details-to-text to-text">To</span>
-                  <span class="details-to-date to-text">30-10-2023</span>
+                  <span id="details-to-date" class="details-to-date to-text"></span>
                 </div>
               </div>
               <div class="counter-sale-body">
                 <div class="body-row">
                   <span class="row-title">Play</span>
-                  <span class="row-value">Value</span>
+                  <span id="summary-play-value" class="row-value"></span>
                 </div>
 
                 <div class="body-row">
                   <span class="row-title">Win</span>
-                  <span class="row-value">Value</span>
+                  <span id="summary-win-value" class="row-value"></span>
+                </div>
+
+                <div id="commission" class="body-row commission">
+                  <span class="row-title">Commission</span>
+                  <span id="commission-win-value" class="row-value"></span>
                 </div>
               </div>
-              <div class="counter-sale-footer">
+              <div id="outstanding" class="counter-sale-footer">
                 <div class="body-row">
                   <span class="row-title">Outstanding</span>
-                  <span class="row-value">Value</span>
+                  <span id="outstanding-value" class="row-value"></span>
+                </div>
+              </div>
+              <div id="net-to-pay" class="counter-sale-foote net-to-pay">
+                <div class="body-row">
+                  <span class="row-title">Net To Pay</span>
+                  <span id="net-to-pay-value" class="row-value"></span>
                 </div>
               </div>
             </div>
             <div class="server-timer-container">
               <span class="server-title">Server Time : </span>
-              <span class="server-value">Value</span>
+              <span id="server-time-value" class="server-value"></span>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Reprint Modal -->
+  <div id="reprintModal" class="modal">
+
+    <!-- Reprint Modal content -->
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <span>Reprint</span>
+        <span class="close">&times;</span>
+      </div>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <table>
+          <thead>
+            <tr>
+              <th>Sr.No</th>
+              <th>Ticket ID</th>
+              <th>Draw Date</th>
+              <th>Draw Time</th>
+              <th>Play</th>
+              <th>Win</th>
+              <th>Claim</th>
+              <th class="print-action">Print</th>
+            </tr>
+          </thead>
+          <tbody id="reprint-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Winning Modal Popup -->
+  <div id="winningPopup" class="popup">
+
+    <!-- Winning Modal Popup content -->
+    <div class="popup-content">
+      <!-- Modal Popup Body -->
+      <div class="popup-body">
+        <div class="popup-title">
+          <span id="popup-title-text"></span>
+          <span class="popup-close" onclick="closePopup()">&times;</span>
+        </div>
+        <div class="popup-body-content">
+          <div id="win-message"></div>
         </div>
       </div>
     </div>

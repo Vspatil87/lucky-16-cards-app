@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <style>
+        @font-face {
+            font-family: Poppins-Medium;
+            src: url(../assets/Fonts/Poppins-Medium.ttf);
+        }
+
+        @font-face {
+            font-family: Poppins-SemiBold;
+            src: url(../assets/Fonts/Poppins-SemiBold.ttf);
+        }
+
+        body {
+            background-image: url('../assets/images/login-background.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            user-select: none;
+            height: calc(100vh - 16px);
+        }
+
+        .container {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .username,
+        .password {
+            min-height: 30px;
+            width: 250px;
+            border: 2px solid gold;
+            border-radius: 3px;
+            background-color: #000;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-family: Poppins-SemiBold;
+            padding: 5px;
+            color: #fff;
+        }
+
+        .login-button-container {
+            min-height: 30px;
+            width: 250px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .login-button {
+            width: 100px;
+            background-color: #000;
+            font-size: 16px;
+            font-family: Poppins-SemiBold;
+            padding: 5px;
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <div class="input-fields">
+                <input type="text" class="username" id="username" placeholder="Username">
+            </div>
+            <div class="input-fields">
+                <input type="text" class="password" id="password" placeholder="Password">
+            </div>
+            <div class="login-button-container">
+                <button onclick="login()" class="login-button">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const electron = require("electron");
+        const { ipcRenderer } = electron;
+        function login() {
+            let username = document.getElementById('username').value;
+            let password = document.getElementById('password').value;
+            console.log(username, password);
+            ipcRenderer.send("authenticate", { username, password });
+        }
+
+        ipcRenderer.on("authResponceya", function (event, data) {
+            console.log('data == ', data);
+        });
+    </script>
+</body>
+
+</html>

@@ -96,16 +96,37 @@ socket.on("lastWinnerReply", function (data) {
   mainWindow.webContents.send("lastWinnerReply", data);
 });
 
+// Autenticate
+ipcMain.on("authenticate", function (e, userData) {
+  console.log("aut == ", userData);
+  socket.emit("authenticate", userData);
+});
+
+socket.on('authResponce', function (result) {
+  console.log('aut res == ', result);
+  mainWindow.webContents.send('authResponceya', result);
+})
+
+// Account Details
 ipcMain.on("getAccountData", function (e, data) {
+  console.log('account data == ', data);
   socket.emit("getAccountData", data);
 });
 
 socket.on("showAccountData", function (resultData) {
+  console.log('account data 1 == ', resultData);
   mainWindow.webContents.send("showAcccountData", resultData);
 });
 
-ipcMain.on("claimTicket", function (e, ticketId) {
-  socket.emit("claimTicket", ticketId);
+socket.on("showAccountData", function (resultData) {
+  console.log('account data 2 == ', resultData);
+  mainWindow.webContents.send("showAcccountData", resultData);
+});
+
+// Get Winner
+socket.on("currentWinner", function (winner) {
+  console.log("winners == ", winner);
+  mainWindow.webContents.send("currentWinner", winner);
 });
 
 var currentUserId = 18;
@@ -148,9 +169,6 @@ userId = ipcMain.on("userData", function () {
 });
 socket.on("userDataReply", function (dataReply) {
   mainWindow.webContents.send("userDataReply", dataReply);
-});
-socket.on("claimReply", function (claimReply) {
-  mainWindow.webContents.send("userDataReply", claimReply);
 });
 
 // ConfirmBet
@@ -219,6 +237,22 @@ ipcMain.on("barcode_image", function (event, barimage_data) {
 ipcMain.on("getLastTickets", function (e, data) {
   socket.emit("getLastTickets", data);
 });
+
 socket.on("reprintDataReply", function (reprintData) {
   mainWindow.webContents.send("reprintData", reprintData);
+});
+
+ipcMain.on("reprintThis", function (e, data) {
+  console.log('data == ', data);
+  socket.emit("reprintThis", data);
+});
+
+ipcMain.on("claimTicket", function (e, data) {
+  console.log('data == ', data);
+  socket.emit("claimTicket", data);
+});
+
+socket.on("claimReply", function (claimReply) {
+  console.log('claim == ', claimReply);
+  mainWindow.webContents.send("claimReply", claimReply);
 });

@@ -1,12 +1,25 @@
 const electron = require("electron");
 const { ipcRenderer } = electron;
-let { remote } = require("electron");
+const { remote } = require("electron");
 const { PosPrinter } = remote.require("electron-pos-printer");
 const dialog = electron.remote.dialog;
 const path = require("path");
+const moment = require("moment-timezone");
+const timeInKolkata = moment.tz("Asia/Kolkata");
+
 let printerNameDefault;
-var webContents = remote.getCurrentWebContents();
-var printers = webContents.getPrinters(); //list the printers
+let webContents = remote.getCurrentWebContents();
+let printers = webContents.getPrinters(); //list the printers
+let selectedCoinValue = 0;
+let userBalance = 0; // Do not change this value (will come from socket)
+let balance = userBalance;
+let canvasTimer;
+let userBets = Array(16); userBets.fill(0);
+let aId, mId, dId, username, userId;
+let countDown = 0;
+let timerDuration = 180;
+let setTimer = true;
+
 const options = {
   preview: false,
   width: "170px", //  width of content body
@@ -21,20 +34,7 @@ const options = {
     fontWeight: "bold",
   },
 };
-let selectedCoinValue = 0;
-let userBalance = 1000; // Do not change this value (will come from socket)
-let balance = userBalance;
-let userBets = Array(16);
-
-userBets.fill(0);
-let canvasTimer;
-const moment = require("moment-timezone");
-const timeInKolkata = moment.tz("Asia/Kolkata");
-let lastwinners = {
-  winners: [0, 1, 5, 4, 1],
-  betWin: ["0", "2X", "5X", "1X", "8X"],
-};
-lastWinImages = [
+const lastWinImages = [
   "../assets/images/last-win-cards/0.png",
   "../assets/images/last-win-cards/1.png",
   "../assets/images/last-win-cards/2.png",
@@ -52,7 +52,7 @@ lastWinImages = [
   "../assets/images/last-win-cards/14.png",
   "../assets/images/last-win-cards/15.png",
 ];
-winnerImages = [
+const winnerImages = [
   "../assets/images/win-cards/0.png",
   "../assets/images/win-cards/1.png",
   "../assets/images/win-cards/2.png",
@@ -70,7 +70,7 @@ winnerImages = [
   "../assets/images/win-cards/14.png",
   "../assets/images/win-cards/15.png",
 ];
-xImages = [
+const xImages = [
   "../assets/images/1x-to-10x/1.png",
   "../assets/images/1x-to-10x/2.png",
   "../assets/images/1x-to-10x/3.png",
@@ -83,14 +83,41 @@ xImages = [
   "../assets/images/1x-to-10x/10.png",
 ];
 
+// onload functions call
 window.onload = () => {
   ipcRenderer.send("userData");
   ipcRenderer.send("getLastWinners");
-  // getTime();
-  getLastWinners();
-  startTimer();
 };
-// draw time
+
+// Barcode functionality
+document.getElementById("ticketValue").addEventListener("keypress", function (event) {
+  if (event.keyCode === 13 || event.which === 13) {
+    // Enter key was pressed
+    // msg = 'yes' (winamount, betno, ticketId, xvalue, bettime)
+    // msg = 'yes' (winamount, betno, ticketId, xvalue, bettime)
+    let ticketId = document.getElementById("ticketValue").value;
+    console.log(ticketId);
+    if (ticketId.length == 8) {
+      ipcRenderer.send("claimTicket", { ticketId, username });
+      document.getElementById("ticketValue").value = "";
+    }
+  }
+});
+
+ipcRenderer.on("claimReply", function (event, data) {
+  console.log('data === ', data);
+  document.getElementById('winningPopup').style.display = 'block';
+  if (data) {
+    document.getElementById('win-message').innerHTML = data.msg +
+      `<div id="win-amount" class="win-amount">${data.winAmount ? data.winAmount : ''}</div>`;
+  }
+});
+
+function closePopup() {
+  document.getElementById('winningPopup').style.display = 'none';
+}
+
+// Get time
 function getTime() {
   const currentTime = new Date(); // Get the current time
   const minutes = currentTime.getMinutes();
@@ -116,6 +143,7 @@ function getTime() {
   return formattedTime;
 }
 
+// Get Current Draw
 function currentDraw() {
   const currentTime = new Date(); // Get the current time
   const minutes = currentTime.getMinutes();
@@ -134,30 +162,36 @@ function currentDraw() {
     minute: "2-digit",
     hour12: true,
   });
-  console.log("formattedTime"), formattedTime;
+  console.log("formattedTime", formattedTime);
   return formattedTime;
 }
 
-document.addEventListener("keypress", function (event) {
-  if (event.keyCode === 13 || event.which === 13) {
-    // Enter key was pressed
-    let ticketId = document.getElementById("ticketValue").value;
-    console.log(ticketId);
-    if (ticketId.length == 8) {
-      ipcRenderer.send("claimTicket", { ticketId, username });
-      document.getElementById("ticketValue").value = "";
-    }
-  }
+ipcRenderer.on("lastWinnerReply", function (event, data) {
+  setLastWinners(data);
 });
 
-ipcRenderer.on("lastWinnerReply", function (event, data) {
-  // console.log("userData", data);
-  console.log("last winner data", data);
+ipcRenderer.on("currentWinner", function (event, data) {
+  console.log('winner == ', data);
+  winner = data.winner - 1;
+  winnerAmount = data.xvalue - 1;
 });
+
 ipcRenderer.on("timer", function (event, data) {
-  // console.log("userData", data);
+  countDown = data;
+  timerDuration = countDown * 1000;
+  if (setTimer) {
+    if (canvasTimer) {
+      canvasTimer.reset();
+      canvasTimer.setDuration(timerDuration);
+      canvasTimer.start();
+    } else {
+      startTimer();
+    }
+    setTimer = false;
+  }
+  console.log("userData", timerDuration);
 });
-var aId, mId, dId, username, userId;
+
 ipcRenderer.on("userDataReply", function (event, data) {
   const nextDrawTime = getTime();
   const currentDraww = currentDraw();
@@ -168,6 +202,7 @@ ipcRenderer.on("userDataReply", function (event, data) {
   document.getElementById("gameId").innerText = " " + data.username;
   document.getElementById("balance").innerText = " " + data.balance;
   userBalance = data.balance;
+  balance = userBalance;
   aId = data.aId;
   mId = data.mId;
   dId = data.dId;
@@ -175,14 +210,14 @@ ipcRenderer.on("userDataReply", function (event, data) {
   username = data.username;
 });
 
-function getLastWinners() {
-  lastwinners.winners.forEach((winner, index) => {
+function setLastWinners(data) {
+  data.forEach((winner, index) => {
     let imageTag = document.getElementsByClassName("last-win-images")[index];
     let winTag = document.getElementsByClassName("last-win-box")[index];
-    imageTag.src = lastWinImages[winner];
+    imageTag.src = lastWinImages[winner.winner - 1];
     imageTag.style.visibility = "visible";
-    if (lastwinners.betWin[index] && lastwinners.betWin[index] !== "0") {
-      winTag.innerText = lastwinners.betWin[index];
+    if (winner.xvalue && winner.xvalue !== "0" && winner.xvalue !== 1 && winner.xvalue !== '1') {
+      winTag.innerText = winner.xvalue + 'X';
     } else {
       winTag.innerText = "N";
     }
@@ -344,21 +379,9 @@ function double() {
   });
 }
 
-async function openreprintModal() {
-  const drawDate = moment().format("YYYY-MM-DD");
-  const currentDraww = currentDraw();
-  ipcRenderer.send("getLastTickets", { currentDraww, drawDate, username });
-  console.log(reprintModal);
-  reprintModal.style.display = "block";
-}
-
-ipcRenderer.on("reprintData", function (e, reprintData) {
-  console.log(reprintData);
-});
-
-function reprint() { }
-
 function reset() {
+  ipcRenderer.send("userData");
+  ipcRenderer.send("getLastWinners");
   resetBets();
   resetCoins();
   resetBalance();
@@ -414,10 +437,10 @@ async function print(params) {
 
   console.log("this is final data ", betData);
   ipcRenderer.send("confirmbet", betData);
+  resetBets();
 }
 
 // print and generate ticket
-
 ipcRenderer.on("generateTicket", async (event, betsData) => {
   try {
     var allTicket = [];
@@ -739,7 +762,7 @@ function startTimer() {
   canvasTimer = new CanvasCircularCountdown(
     document.getElementById("timer"),
     {
-      duration: 20000,
+      duration: timerDuration,
       elapsedTime: 0,
       throttle: 100,
       clockwise: true,
@@ -753,16 +776,16 @@ function startTimer() {
       captionColor: "#ffffff",
       captionFont: "20px Poppins",
       captionText: (percentage, time) => {
-        return ((time.remaining % 60000) / 1000).toFixed(0);
+        return (time.remaining / 1000).toFixed(0);
       },
     },
     function onTimerRunning(percentage, time, instance) {
-      let timeRemaining = ((time.remaining % 60000) / 1000).toFixed(0);
+      let timeRemaining = (time.remaining / 1000).toFixed(0);
       if (timeRemaining < 10) {
         disableGame();
       }
       if (timeRemaining < 1) {
-        instance.stop();
+        // instance.stop();
         spin();
       }
     }
@@ -818,6 +841,7 @@ function hideText(hide) {
 // Q = 20, k = 40, A = 65, J = 85
 // club = -50, heart = -73, spade = -97, diamond = -2
 function spin() {
+  ipcRenderer.send("currentWinner");
   let wheelTwo = document.getElementById("wheel-two");
   let wheelThree = document.getElementById("wheel-three");
   wheelTwo.classList.add("spin");
@@ -830,20 +854,16 @@ function spin() {
   wheelThree.classList.remove("sWin");
   wheelThree.classList.remove("dWin");
   wheelThree.classList.remove("cWin");
-  let winners = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-  let winnersAmount = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  const winner = Math.floor(Math.random() * winners.length);
-  const winnerAmount = Math.floor(Math.random() * winnersAmount.length);
   setTimeout(() => {
-    stopWheelTwo(winner);
+    stopWheelTwo();
   }, 8000);
 
   setTimeout(() => {
-    stopWheelThree(winner, winnerAmount);
+    stopWheelThree();
   }, 10000);
 }
 
-function stopWheelTwo(winner) {
+function stopWheelTwo() {
   let wheelTwo = document.getElementById("wheel-two");
   wheelTwo.style.animationFillMode = "forwards";
   wheelTwo.style.animationTimingFunction = "ease";
@@ -859,7 +879,7 @@ function stopWheelTwo(winner) {
   }
 }
 
-function stopWheelThree(winner, winnerAmount) {
+function stopWheelThree() {
   let wheelThree = document.getElementById("wheel-three");
   wheelThree.classList.remove("spinWheel");
   wheelThree.style.animationFillMode = "forwards";
@@ -908,25 +928,26 @@ function setWinner(winner, winnerAmount) {
     wheelThree.classList.remove("spinWheel");
     wheelWinner.style.visibility = "hidden";
     wheelWinnerAmount.style.visibility = "hidden";
-    canvasTimer.reset();
-    canvasTimer.start();
+    setTimer = true;
     enableGame();
   }, 2000);
 }
 
-// Modal Popup
+// Account Modal Popup
 // Get the modal
-var modal = document.getElementById("myModal");
+let modal = document.getElementById("accountModal");
 
 // Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+let btn = document.getElementById("account");
 
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+let span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on the button, open the modal
 btn.onclick = function () {
   modal.style.display = "block";
+  const currentDate = moment().format("YYYY-MM-DD");
+  getAccountData(currentDate, currentDate);
 }
 
 // When the user clicks on <span> (x), close the modal
@@ -939,4 +960,145 @@ window.onclick = function (event) {
   if (event.target == modal) {
     modal.style.display = "none";
   }
+}
+
+function getAccountData(fromDate, toDate) {
+  ipcRenderer.send("getAccountData", {
+    from: fromDate,
+    to: toDate,
+    username,
+  });
+}
+
+function resetAccountDates() {
+  const fromDate = document.getElementById("select-from");
+  const toDate = document.getElementById("select-to");
+  if (fromDate.value || toDate.value) {
+    fromDate.value = null
+    toDate.value = null
+    const currentDate = moment().format("YYYY-MM-DD");
+    getAccountData(currentDate, currentDate);
+  }
+}
+
+// 1 => Counter Sale
+// 2 => Net to Pay
+let accountTabSelected = 1;
+function toggleAccountTab(tabId) {
+  if (tabId === 1) {
+    accountTabSelected = 1;
+    document.getElementById('net-to-pay-button').style.background = '#DDDDDD';
+    document.getElementById('net-to-pay-button').style.color = '#000';
+    document.getElementById('counter-sale-button').style.background = '#411a5dc4';
+    document.getElementById('counter-sale-button').style.color = '#fff';
+  } else {
+    accountTabSelected = 2;
+    document.getElementById('counter-sale-button').style.background = '#DDDDDD';
+    document.getElementById('counter-sale-button').style.color = '#000';
+    document.getElementById('net-to-pay-button').style.background = '#411a5dc4';
+    document.getElementById('net-to-pay-button').style.color = '#fff';
+  }
+  resetAccountDates();
+  const currentDate = moment().format("YYYY-MM-DD");
+  getAccountData(currentDate, currentDate);
+}
+
+function getAccountDataForCustomDates() {
+  const fromDate = document.getElementById("select-from").value;
+  const toDate = document.getElementById("select-to").value;
+  if (fromDate && toDate) {
+    getAccountData(fromDate, toDate);
+  }
+}
+
+ipcRenderer.on("showAcccountData", function (event, data) {
+  const accountResults = data.results;
+  const accountSummary = data.rightData;
+  let accountTableBody = document.getElementById('account-table-body');
+  const rows = accountResults.map((data, index) => {
+    return `<tr>
+        <td>${index + 1}</td>
+        <td>${data.drawDate}</td>
+        <td>${data.totalPlay}</td>
+        <td>${data.totalWin}</td>
+      </tr>`
+  });
+  accountTableBody.innerHTML = rows.join('\n');
+
+  if (accountSummary) {
+    document.getElementById('game-id-value').innerText = accountSummary.username;
+    document.getElementById('reatiler-code-value').innerText = accountSummary.username;
+    document.getElementById('details-from-date').innerText = accountSummary.from;
+    document.getElementById('details-to-date').innerText = accountSummary.to;
+    document.getElementById('summary-play-value').innerText = accountSummary.totalBet;
+    document.getElementById('summary-win-value').innerText = accountSummary.totalWin;
+    if (accountTabSelected === 1) {
+      document.getElementById('commission').style.display = 'none';
+      document.getElementById('net-to-pay').style.display = 'none';
+      document.getElementById('outstanding').style.display = 'flex';
+      document.getElementById('outstanding-value').innerText = accountSummary.outstanding;
+    } else {
+      document.getElementById('outstanding').style.display = 'none';
+      document.getElementById('commission').style.display = 'flex';
+      document.getElementById('net-to-pay').style.display = 'flex';
+      document.getElementById('commission-win-value').innerText = accountSummary.com;
+      document.getElementById('net-to-pay-value').innerText = accountSummary.netToPay;
+    }
+    document.getElementById('server-time-value').innerText = accountSummary.serverDate;
+  }
+});
+
+// Reprint Modal Popup
+// Get the reprintModal
+let reprintModal = document.getElementById("reprintModal");
+
+// Get the button that opens the reprintModal
+let reprintBtn = document.getElementById("reprint");
+
+// Get the <closeBtn> element that closes the reprintModal
+let closeBtn = document.getElementsByClassName("close")[1];
+
+// When the user clicks on the button, open the reprintModal
+reprintBtn.onclick = function () {
+  reprintModal.style.display = "block";
+  getReprintData();
+}
+
+// When the user clicks on <closeBtn> (x), close the reprintModal
+closeBtn.onclick = function () {
+  reprintModal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the reprintModal, close it
+window.onclick = function (event) {
+  if (event.target == reprintModal) {
+    reprintModal.style.display = "none";
+  }
+}
+
+function getReprintData() {
+  const drawDate = moment().format("YYYY-MM-DD");
+  const currentDraww = currentDraw();
+  ipcRenderer.send("getLastTickets", { currentDraww, drawDate, username });
+}
+
+ipcRenderer.on("reprintData", function (e, reprintData) {
+  let reprintTableBody = document.getElementById('reprint-table-body');
+  const rows = reprintData.map((data, index) => {
+    return `<tr>
+        <td>${index + 1}</td>
+        <td>${data.ticketId}</td>
+        <td>${data.drawDate}</td>
+        <td>${data.drawTime}</td>
+        <td>${data.betTotal}</td>
+        <td>${data.winAmount}</td>
+        <td>${data.claimStatus}</td>
+        <td class="print-action"><button onclick="reprintTicket(${data.ticketId})" class="modal-reprint">P</button></td>
+      </tr>`
+  });
+  reprintTableBody.innerHTML = rows.join('\n');
+});
+
+function reprintTicket(ticketId) {
+  ipcRenderer.send("reprintThis", { ticketId });
 }
