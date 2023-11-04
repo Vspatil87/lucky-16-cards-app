@@ -19,7 +19,8 @@ let aId, mId, dId, username, userId;
 let countDown = 0;
 let timerDuration = 180;
 let setTimer = true;
-
+let winner = 8;
+let winnerAmount = 0;
 const options = {
   preview: false,
   width: "170px", //  width of content body
@@ -294,6 +295,7 @@ function setBet(betNumber) {
       if (bet) {
         document.getElementById(index).innerText = bet;
         document.getElementById(index).style.cssText = betNumberCss;
+        // document.getElementById(index).classList.add('bet-circle');
       }
     }
     return bet;
@@ -340,6 +342,7 @@ function setMultiBets(type) {
     document.getElementById(type).innerText = previousValue + selectedCoinValue;
   }
   document.getElementById(type).style.cssText = betNumberCss;
+  // document.getElementById(type).classList.add('bet-circle-for-all');
   index.forEach((element) => {
     setBet(element);
   });
@@ -347,7 +350,7 @@ function setMultiBets(type) {
 
 function rebet() {
   let betNumberCss = `font-size: 16px; font-family: Poppins-SemiBold;`;
-  let betArray = [0, 0, 0, 0, 15, 30, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let betArray = JSON.parse(localStorage.getItem('betData'));
   let total = betArray.reduce(
     (accumulator, currentValue) => accumulator + currentValue
   );
@@ -361,6 +364,7 @@ function rebet() {
       document.getElementById(index).style.cssText = betNumberCss;
     }
   });
+  resetBalance();
 }
 
 function double() {
@@ -394,11 +398,13 @@ function resetBets() {
     let id = "" + index;
     document.getElementById(id).innerText = "Play";
     document.getElementById(id).style.cssText = betNumberCss;
+    // document.getElementById(id).classList.remove('bet-circle');
     return 0;
   });
   allTypes.map((type) => {
     document.getElementById(type).innerText = "Play";
     document.getElementById(type).style.cssText = betNumberCss;
+    // document.getElementById(type).classList.remove('bet-circle');
     return 0;
   });
 }
@@ -407,6 +413,9 @@ async function print(params) {
   const totalBets = userBets.reduce(
     (accumulator, currentValue) => accumulator + currentValue
   );
+  if (!totalBets) {
+    return;
+  }
   let betData = {
     gameName: params,
     username,
@@ -434,7 +443,7 @@ async function print(params) {
     drawTime: await getTime(),
     drawDate: timeInKolkata.format("YYYY-MM-DD"),
   };
-
+  localStorage.setItem('betData', JSON.stringify(userBets));
   console.log("this is final data ", betData);
   ipcRenderer.send("confirmbet", betData);
   resetBets();
@@ -784,7 +793,7 @@ function startTimer() {
       if (timeRemaining < 10) {
         disableGame();
       }
-      if (timeRemaining < 1) {
+      if (timeRemaining % 20 === 0) {
         // instance.stop();
         spin();
       }
@@ -856,17 +865,17 @@ function spin() {
   wheelThree.classList.remove("cWin");
   setTimeout(() => {
     stopWheelTwo();
-  }, 8000);
+  }, 4000);
 
   setTimeout(() => {
     stopWheelThree();
-  }, 10000);
+  }, 5500);
 }
 
 function stopWheelTwo() {
   let wheelTwo = document.getElementById("wheel-two");
-  wheelTwo.style.animationFillMode = "forwards";
-  wheelTwo.style.animationTimingFunction = "ease";
+  // wheelTwo.style.animationFillMode = "forwards";
+  // wheelTwo.style.animationTimingFunction = "ease";
   console.log("a == ", winner);
   if (winner < 4) {
     wheelTwo.classList.add("aWin");
@@ -882,31 +891,31 @@ function stopWheelTwo() {
 function stopWheelThree() {
   let wheelThree = document.getElementById("wheel-three");
   wheelThree.classList.remove("spinWheel");
-  wheelThree.style.animationFillMode = "forwards";
-  wheelThree.style.animationTimingFunction = "ease";
+  // wheelThree.style.animationFillMode = "forwards";
+  // wheelThree.style.animationTimingFunction = "ease";
   if (winner === 0 || winner === 4 || winner === 8 || winner === 12) {
     wheelThree.classList.add("hWin");
     setTimeout(() => {
       setWinner(winner, winnerAmount);
-    }, 3500);
+    }, 4000);
   }
   if (winner === 1 || winner === 5 || winner === 9 || winner === 13) {
     wheelThree.classList.add("sWin");
     setTimeout(() => {
       setWinner(winner, winnerAmount);
-    }, 4500);
+    }, 5000);
   }
   if (winner === 2 || winner === 6 || winner === 10 || winner === 14) {
     wheelThree.classList.add("dWin");
     setTimeout(() => {
       setWinner(winner, winnerAmount);
-    }, 1500);
+    }, 2000);
   }
   if (winner === 3 || winner === 7 || winner === 11 || winner === 15) {
     wheelThree.classList.add("cWin");
     setTimeout(() => {
       setWinner(winner, winnerAmount);
-    }, 2500);
+    }, 3000);
   }
 }
 
@@ -1026,7 +1035,7 @@ ipcRenderer.on("showAcccountData", function (event, data) {
   accountTableBody.innerHTML = rows.join('\n');
 
   if (accountSummary) {
-    document.getElementById('game-id-value').innerText = accountSummary.username;
+    document.getElementById('game-id-value').innerText = 'Lucky 16 Cards';
     document.getElementById('reatiler-code-value').innerText = accountSummary.username;
     document.getElementById('details-from-date').innerText = accountSummary.from;
     document.getElementById('details-to-date').innerText = accountSummary.to;
@@ -1037,12 +1046,14 @@ ipcRenderer.on("showAcccountData", function (event, data) {
       document.getElementById('net-to-pay').style.display = 'none';
       document.getElementById('outstanding').style.display = 'flex';
       document.getElementById('outstanding-value').innerText = accountSummary.outstanding;
+      document.getElementById('account-type-text').innerText = 'Counter Sale';
     } else {
       document.getElementById('outstanding').style.display = 'none';
       document.getElementById('commission').style.display = 'flex';
       document.getElementById('net-to-pay').style.display = 'flex';
       document.getElementById('commission-win-value').innerText = accountSummary.com;
       document.getElementById('net-to-pay-value').innerText = accountSummary.netToPay;
+      document.getElementById('account-type-text').innerText = 'Net To Pay';
     }
     document.getElementById('server-time-value').innerText = accountSummary.serverDate;
   }
@@ -1100,5 +1111,103 @@ ipcRenderer.on("reprintData", function (e, reprintData) {
 });
 
 function reprintTicket(ticketId) {
-  ipcRenderer.send("reprintThis", { ticketId });
+  ipcRenderer.send("reprintThis", ticketId);
+}
+
+function logout() {
+  ipcRenderer.send("logout", username)
+}
+
+
+function printAccount() {
+
+  let username = document.getElementById('game-id-value').innerText;
+  let from = document.getElementById('details-from-date').innerText;
+  let To = document.getElementById('details-to-date').innerText;
+  let totalPlay = document.getElementById('summary-play-value').innerText;
+  let totalWin = document.getElementById('summary-win-value').innerText;
+  let outstanding = document.getElementById('outstanding-value').innerText;
+  let netToPay = document.getElementById('net-to-pay-value').innerText;
+
+  let serverTime = document.getElementById('server-time-value').innerHTML;
+
+  let com = document.getElementById('commission-win-value').innerHTML;
+  let tktData = ``;
+  if (accountTabSelected === 1) {
+    tktData += `  <div style="margin-left:5px">
+      <span style="display: block; font-size: 11px;">Game Id: Lucky 16 Cards</span>
+      <br>
+      <span style="display: block; font-size: 11px;">Counter Sale</span>
+      <br>
+      <span style="display: block; font-size: 11px;">Retailer Code &nbsp;:`+ (username) + `</span>
+      <br>
+      <span style="display: block; font-size: 11px;">`+ (from) + ` &nbsp; &nbsp;&nbsp; TO &nbsp;
+          &nbsp;&nbsp; ` + (To) + `</span>
+      <hr style="height: 2px; background-color: #000000;">
+      <span style="display: block; font-size: 13px;"> Play &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: `+ (totalPlay)
+      + ` </span>
+      <br>
+      <span style="display: block; font-size: 13px;">Win &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: `+ (totalWin) +
+      ` </span>
+      <hr style="height: 2px; background-color: #000000;">
+      <span style="display: block; font-size: 13px;">Outstanding &nbsp;
+          &nbsp;&nbsp;: `+ (outstanding) + ` </span>
+      <br>
+      <span style="display: block; font-size: 9px;">Server Time ; `+ (serverTime) + ` </span>
+  </div>`
+  } else {
+
+    tktData += `  <div style="margin-left:5px">
+      <span style="display: block; font-size: 11px;">Game Id: Lucky 16 Cards</span>
+      <br>
+      <span style="display: block; font-size: 11px;">Net To Pay</span>
+      <br>
+      <span style="display: block; font-size: 11px;">Retailer Code &nbsp;`+ (username) + `</span>
+      <br>
+      <span style="display: block; font-size: 11px;">`+ (from) + ` &nbsp; &nbsp;&nbsp; TO &nbsp;
+          &nbsp;&nbsp; ` + (To) + `</span>
+      <hr style="height: 2px; background-color: #000000;">
+      <span style="display: block; font-size: 13px;"> Play &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `+ (totalPlay)
+      + ` </span>
+  
+      <span style="display: block; font-size: 13px;">Win &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `+ (totalWin) +
+      ` </span>
+        
+      <span style="display: block; font-size: 13px;">Commission &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; `+ (com) +
+      `
+      <hr style="height: 2px; background-color: #000000;">
+      <span style="display: block; font-size: 13px;">Net To Pay &nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp; `+ (netToPay) + ` </span>
+      <br>
+      <span style="display: block; font-size: 9px;">Server Time `+ (serverTime) + ` </span>
+  </div>`
+  }
+
+
+
+  const data = [
+    {
+      type: 'image',
+      path: path.join(__dirname, '/logo.png'),     // file path
+      position: 'left',                                  // position of image: 'left' | 'center' | 'right'
+      width: '50px',                                           // width of image in px; default: auto
+      height: '50px',
+      // width of image in px; default: 50 or '50px'
+    },
+    {
+      type: 'text',
+      value: tktData,
+      style: 'margin:0;',
+      css: { "font-weight": "900", "font-size": "10px" }
+    },
+  ]
+  if (data) {
+    PosPrinter.print(data, options)
+      .then((result_print) => {
+        reset()
+      })
+      .catch((error) => {
+        console.log("error -", error);
+      })
+  }
 }

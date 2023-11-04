@@ -20,21 +20,23 @@ const path = require("path");
 const io = require("socket.io-client");
 require("events").EventEmitter.defaultMaxListeners = Infinity;
 
-var socket = io.connect("http://103.154.233.156:7013");
-var moment = require("moment");
+let socket = io.connect("http://103.154.233.156:7014");
+let moment = require("moment");
 const { exec } = require("child_process");
 process.env.NODE_ENV = "development";
 let mainWindow;
 const moment1 = require("moment-timezone");
 const { Socket } = require("dgram");
 const { log } = require("console");
-var loginUsername = "sam";
+let loginUsername;
+let currentUserId = 18;
+
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   console.log("CurrentWidth ------------- ", width);
   console.log("Currentheight ------------- ", height);
   mainWindow = new BrowserWindow({
-    title: "10 Ka Dam Game",
+    title: "Lucky 16 Cards",
     width: width,
     height: height,
     icon: path.join(__dirname, "../assets/images/a2.ico"),
@@ -52,7 +54,7 @@ function createWindow() {
 
   mainWindow.loadURL(
     url.format({
-      pathname: path.join("../app/index.html"),
+      pathname: path.join("../app/login.html"),
       protocol: "file:",
       slashes: true,
     })
@@ -62,14 +64,9 @@ function createWindow() {
     show: true;
     mainWindow.show();
   });
-  mainWindow.on("close", (e, Event) => {
-    e.preventDefault();
-    gamewindowsisrunning = false;
-    socket.emit("logout", loginUsername);
-    mainWindow.destroy();
-    app.quit();
-  });
+
   mainWindow.setMenuBarVisibility(false);
+
   const handle = mainWindow.getNativeWindowHandle();
   mainWindow.on("closed", function () {
     gamewindowsisrunning = false;
@@ -80,18 +77,23 @@ function createWindow() {
 }
 app.disableHardwareAcceleration();
 app.on("ready", createWindow);
+
 socket.on("connect", function () {
   console.log("connected");
 });
+
 socket.on("disconnect", function () {
   console.log("socketDisconnected ");
 });
+
 socket.on("confirmbet", function (data) {
   socket.emit("confirmbet", data);
 });
+
 ipcMain.on("getLastWinners", function () {
   socket.emit("getLastWinners");
 });
+
 socket.on("lastWinnerReply", function (data) {
   mainWindow.webContents.send("lastWinnerReply", data);
 });
@@ -102,10 +104,32 @@ ipcMain.on("authenticate", function (e, userData) {
   socket.emit("authenticate", userData);
 });
 
+ipcMain.on("logout", function (e, username) {
+  console.log("username == ", username);
+  mainWindow.close();
+});
+
 socket.on('authResponce', function (result) {
   console.log('aut res == ', result);
-  mainWindow.webContents.send('authResponceya', result);
+  let status = result.status;
+  if (status === 'success') {
+    goToGame(result.user);
+  } else {
+    mainWindow.webContents.send('authResponse', status);
+  }
 })
+
+function goToGame(userDetails) {
+  loginUsername = userDetails.username;
+  currentUserId = userDetails.userId;
+  mainWindow.loadURL(
+    url.format({
+      pathname: path.join("../app/index.html"),
+      protocol: "file:",
+      slashes: true,
+    })
+  );
+}
 
 // Account Details
 ipcMain.on("getAccountData", function (e, data) {
@@ -129,12 +153,11 @@ socket.on("currentWinner", function (winner) {
   mainWindow.webContents.send("currentWinner", winner);
 });
 
-var currentUserId = 18;
-
 /* --- Curent Timer send ---- */
 /* Get User Data  */
 // Quit when all windows are closed.
 app.on("window-all-closed", async function () {
+  console.log('check');
   globalShortcut.unregisterAll();
   if (process.platform !== "darwin") {
     socket.emit("logout", loginUsername);
@@ -158,15 +181,18 @@ app.on("activate", function () {
     createWindow();
   }
 });
+
 // Timer socket
 socket.on("timer", function (countdown) {
   // console.log("countDown", countdown);
   mainWindow.webContents.send("timer", countdown);
 });
-// Get user data usig username
-userId = ipcMain.on("userData", function () {
+
+// Get user data usig userId
+ipcMain.on("userData", function () {
   socket.emit("userData", currentUserId);
 });
+
 socket.on("userDataReply", function (dataReply) {
   mainWindow.webContents.send("userDataReply", dataReply);
 });

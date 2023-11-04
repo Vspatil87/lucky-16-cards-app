@@ -32,6 +32,16 @@
             align-items: center;
         }
 
+        .error-msg {
+            font-size: 16px;
+            color: orangered;
+            text-transform: capitalize;
+            display: flex;
+            justify-content: center;
+            font-family: Poppins-SemiBold;
+            margin-bottom: 10px;
+        }
+
         .username,
         .password {
             min-height: 30px;
@@ -71,6 +81,7 @@
 <body>
     <div class="container">
         <div>
+            <div class="error-msg" id="error-msg"></div>
             <div class="input-fields">
                 <input type="text" class="username" id="username" placeholder="Username">
             </div>
@@ -93,8 +104,9 @@
             ipcRenderer.send("authenticate", { username, password });
         }
 
-        ipcRenderer.on("authResponceya", function (event, data) {
-            console.log('data == ', data);
+        ipcRenderer.on("authResponse", function (event, message) {
+            console.log('message == ', message);
+            document.getElementById('error-msg').innerText = message;
         });
     </script>
 </body>

@@ -17,6 +17,8 @@
     src: url(../assets/Fonts/Poppins-SemiBold.ttf);
 }
 
+/* KeyFrames */
+/* For Modal (Account, Reprint) */
 @keyframes animatetop {
     from {
         top: -300px;
@@ -29,6 +31,7 @@
     }
 }
 
+/* For Modal (Winning Popup) */
 @keyframes popupAnimatetop {
     from {
         top: -300px;
@@ -38,6 +41,120 @@
     to {
         top: calc(33% - 100px);
         opacity: 1
+    }
+}
+
+/* For inner wheel */
+@keyframes spinCardSetWheel {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-359deg);
+    }
+}
+
+/* For outer wheel */
+@keyframes spinFaceCardWheel {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(359deg);
+    }
+}
+
+/* When winner is from diamond set (for ace) */
+@keyframes diamondSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        /* transform: rotate(-26deg); */
+        transform: rotate(-386deg);
+    }
+}
+
+/* When winner is from club set (for ace) */
+@keyframes clubSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        /* transform: rotate(-49deg); */
+        transform: rotate(-409deg);
+    }
+}
+
+/* When winner is from heart set (for ace) */
+@keyframes heartSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        /* transform: rotate(-72deg); */
+        transform: rotate(-432deg);
+    }
+}
+
+/* When winner is from spade set (for ace) */
+@keyframes spadeSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        /* transform: rotate(-95deg); */
+        transform: rotate(-455deg);
+    }
+}
+
+/* When winner is from queen set */
+@keyframes queenSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(377deg);
+    }
+}
+
+/* When winner is king */
+@keyframes kingSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(401deg);
+    }
+}
+
+/* When winner is ace */
+@keyframes aceSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(424deg);
+    }
+}
+
+/* When winner is joker */
+@keyframes jokerSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(447deg);
     }
 }
 
@@ -114,146 +231,52 @@ body {
 /* Wheel area css start */
 
 .spin {
-    animation: rotateImg 2s linear infinite;
+    animation: spinFaceCardWheel 2s linear infinite;
 }
 
 .spinWheel {
-    animation: rotateImg2 2s linear infinite;
+    animation: spinCardSetWheel 2s linear infinite;
 }
-
-@keyframes rotateImg2 {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(-359deg);
-    }
-}
-
 
 .dWin {
-    animation: dRotate 2s linear forwards;
+    animation: diamondSpin 2s linear forwards;
 }
 
-@keyframes dRotate {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(-27deg);
-    }
-}
 
 .cWin {
-    animation: cRotate 3s linear forwards;
+    animation: clubSpin 3s linear forwards;
 }
 
-@keyframes cRotate {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(-50deg);
-    }
-}
 
 .hWin {
-    animation: hRotate 4s linear forwards;
+    animation: heartSpin 4s linear forwards;
 }
 
-@keyframes hRotate {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(-73deg);
-    }
-}
 
 .sWin {
-    animation: sRotate 5s linear forwards;
+    animation: spadeSpin 5s linear forwards;
 }
 
-@keyframes sRotate {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(-97deg);
-    }
-}
-
-
-@keyframes rotateImg {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(359deg);
-    }
-}
 
 .qWin {
-    animation: qRotate 2s linear forwards;
+    animation: queenSpin 2s linear forwards;
 }
 
-@keyframes qRotate {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(20deg);
-    }
-}
 
 .kWin {
-    animation: kRotate 3s linear forwards;
+    animation: kingSpin 3s linear forwards;
 }
 
-@keyframes kRotate {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(40deg);
-    }
-}
 
 .aWin {
-    animation: aRotate 4s linear forwards;
+    animation: aceSpin 4s linear forwards;
 }
 
-@keyframes aRotate {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(65deg);
-    }
-}
 
 .jWin {
-    animation: jRotate 5s linear forwards;
+    animation: jokerSpin 5s linear forwards;
 }
 
-@keyframes jRotate {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(85deg);
-    }
-}
 
 @media screen and (min-width: 1020px) and (max-width: 1300px) {
     .wheel-container {
@@ -1345,4 +1368,34 @@ td {
 .win-amount {
     text-align: center;
     font-family: Poppins-SemiBold;
+}
+
+.bet-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--blackColor);
+    border-radius: 40px;
+    width: 45px;
+    height: 45px;
+    background: var(--whiteColor);
+    color: var(--blackColor) !important;
+    font-size: 16px !important;
+    font-family: Poppins-SemiBold !important;
+    top: 42% !important;
+}
+
+.bet-circle-for-all {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--blackColor);
+    border-radius: 40px;
+    width: 45px;
+    height: 45px;
+    background: var(--whiteColor);
+    color: var(--blackColor) !important;
+    font-size: 16px !important;
+    font-family: Poppins-SemiBold !important;
+    right: 20% !important;
 }

@@ -32,7 +32,7 @@
       <div class="blue-box password btn">
         <label class="btn">PASSWORD</label>
       </div>
-      <div class="close-icon btn">
+      <div onclick="logout()" class="close-icon btn">
         <img class="btn" src="../assets/images/buttons/close-icon.png" alt="close" width="40px" height="30px">
       </div>
     </div>
@@ -272,7 +272,7 @@
           <input class="select-to" type="date" name="" id="select-to">
           <button class="submit" onclick="getAccountDataForCustomDates()">Submit</button>
           <button class="cancel" onclick="resetAccountDates()">Cancel</button>
-          <button class="modal-print">Print</button>
+          <button class="modal-print" onclick="printAccount()">Print</button>
         </div>
         <div class="account-details-container">
           <div class="account-table-container">
@@ -293,7 +293,7 @@
               <span class="game-id-title">Game ID : <span class="game-id-value" id="game-id-value"></span></span>
             </div>
             <div class="counter-sale-text">
-              <span>Counter Sale</span>
+              <span id="account-type-text"></span>
             </div>
             <div class="retailer-code">
               <span class="reatiler-code-text">Reatiler Code : <span class="reatiler-code-value"
@@ -399,7 +399,6 @@
   </div>
 
   <script src="index.js"></script>
-  <script src="Account.js"></script>
 </body>
 
 </html>

@@ -16,8 +16,8 @@
   "license": "ISC",
   "build": {
     "asar": true,
-    "appId": "com.smasher.10kadum",
-    "productName": "10kadum-H",
+    "appId": "com.smasher.lucky16cards",
+    "productName": "lucky16cards-H",
     "win": {
       "icon": "./src/assets/images/a2.ico",
       "target": [
@@ -40,7 +40,7 @@
       "./**/*"
     ],
     "extraMetadata": {
-      "main": "src/main/main.js"
+      "main": "app/index.js"
     },
     "extends": null
   },
