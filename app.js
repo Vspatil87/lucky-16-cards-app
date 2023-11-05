@@ -29,45 +29,45 @@ const moment1 = require("moment-timezone");
 const { Socket } = require("dgram");
 const { log } = require("console");
 let loginUsername;
-let currentUserId = 18;
+let currentUserId;
 
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-  console.log("CurrentWidth ------------- ", width);
-  console.log("Currentheight ------------- ", height);
+
   mainWindow = new BrowserWindow({
     title: "Lucky 16 Cards",
     width: width,
     height: height,
-    icon: path.join(__dirname, "../assets/images/a2.ico"),
+    icon: path.join(__dirname, "../assets/images/a2.ico"), // No icon provided
     frame: false,
     resizable: false,
     fullscreen: true,
     webPreferences: {
       nodeIntegration: true,
-      devTools: true,
+      devTools: false, // to be false before build
     },
   });
+
   mainWindow.show();
-  let currentDirr = __dirname;
-  let desiredDirr = path.dirname(currentDirr);
 
   mainWindow.loadURL(
     url.format({
-      pathname: path.join("../app/login.html"),
+      pathname: path.join(__dirname, "app", "login.html"),
       protocol: "file:",
       slashes: true,
     })
   );
+
   gamewindowsisrunning = true;
+
   mainWindow.once("ready-to-show", () => {
-    show: true;
     mainWindow.show();
   });
 
   mainWindow.setMenuBarVisibility(false);
 
-  const handle = mainWindow.getNativeWindowHandle();
+  // const handle = mainWindow.getNativeWindowHandle();
+
   mainWindow.on("closed", function () {
     gamewindowsisrunning = false;
     socket.emit("logout", loginUsername);
@@ -100,17 +100,10 @@ socket.on("lastWinnerReply", function (data) {
 
 // Autenticate
 ipcMain.on("authenticate", function (e, userData) {
-  console.log("aut == ", userData);
   socket.emit("authenticate", userData);
 });
 
-ipcMain.on("logout", function (e, username) {
-  console.log("username == ", username);
-  mainWindow.close();
-});
-
 socket.on('authResponce', function (result) {
-  console.log('aut res == ', result);
   let status = result.status;
   if (status === 'success') {
     goToGame(result.user);
@@ -124,32 +117,29 @@ function goToGame(userDetails) {
   currentUserId = userDetails.userId;
   mainWindow.loadURL(
     url.format({
-      pathname: path.join("../app/index.html"),
+      pathname: path.join(__dirname, "app", "index.html"),
       protocol: "file:",
       slashes: true,
     })
   );
 }
 
+// Logout by user
+ipcMain.on("logout", function (e, username) {
+  mainWindow.close();
+});
+
 // Account Details
 ipcMain.on("getAccountData", function (e, data) {
-  console.log('account data == ', data);
   socket.emit("getAccountData", data);
 });
 
 socket.on("showAccountData", function (resultData) {
-  console.log('account data 1 == ', resultData);
   mainWindow.webContents.send("showAcccountData", resultData);
 });
 
-socket.on("showAccountData", function (resultData) {
-  console.log('account data 2 == ', resultData);
-  mainWindow.webContents.send("showAcccountData", resultData);
-});
-
-// Get Winner
+// Get Winning number socket
 socket.on("currentWinner", function (winner) {
-  console.log("winners == ", winner);
   mainWindow.webContents.send("currentWinner", winner);
 });
 
@@ -165,7 +155,7 @@ app.on("window-all-closed", async function () {
     gamewindowsisrunning = false;
     const list = await require("find-process")("pid", proc.pid);
     app.quit();
-    if (list[0] && list[0].name.toLowerCase() === "10Kadm.exe")
+    if (list[0] && list[0].name.toLowerCase() === "lucky16cards.exe")
       process.kill(proc.pid);
   }
 });

@@ -394,14 +394,14 @@ body {
         position: absolute;
         width: 380px;
         z-index: 2;
-        margin-left: -2px;
+        margin-left: 2px;
         margin-top: 36px;
         object-fit: contain;
     }
 
     .wheel-four {
         position: absolute;
-        width: 200px;
+        width: 190px;
         z-index: 2;
         transform: translate(0px, 38px);
         object-fit: contain;
@@ -553,7 +553,7 @@ body {
 
 .heart-ace>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--blackColor);
@@ -561,7 +561,7 @@ body {
 
 .spade-ace>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--whiteColor);
@@ -569,7 +569,7 @@ body {
 
 .diamond-ace>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--blackColor);
@@ -577,7 +577,7 @@ body {
 
 .club-ace>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--whiteColor);
@@ -607,7 +607,7 @@ body {
 
 .heart-king>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--blackColor);
@@ -615,7 +615,7 @@ body {
 
 .spade-king>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--whiteColor);
@@ -623,7 +623,7 @@ body {
 
 .diamond-king>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--blackColor);
@@ -631,7 +631,7 @@ body {
 
 .club-king>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--whiteColor);
@@ -661,7 +661,7 @@ body {
 
 .heart-queen>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--blackColor);
@@ -669,7 +669,7 @@ body {
 
 .spade-queen>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--whiteColor);
@@ -677,7 +677,7 @@ body {
 
 .diamond-queen>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--blackColor);
@@ -685,7 +685,7 @@ body {
 
 .club-queen>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--whiteColor);
@@ -715,7 +715,7 @@ body {
 
 .heart-joker>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--blackColor);
@@ -723,7 +723,7 @@ body {
 
 .spade-joker>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--whiteColor);
@@ -731,7 +731,7 @@ body {
 
 .diamond-joker>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--blackColor);
@@ -739,7 +739,7 @@ body {
 
 .club-joker>span {
     position: absolute;
-    top: 49%;
+    top: 50%;
     font-family: Poppins-Medium;
     font-size: var(--mFontSize);
     color: var(--whiteColor);
@@ -929,8 +929,8 @@ input::placeholder {
 }
 
 .coins-btn-container>img {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
 }
 
 .btn-container {
@@ -1363,13 +1363,21 @@ td {
     height: 150px;
     font-size: var(--xlFontSize);
     color: var(--blackColor);
+    text-transform: capitalize;
 }
 
 .win-amount {
     text-align: center;
     font-family: Poppins-SemiBold;
+    font-size: 30px;
 }
 
+.win-bet-time {
+    text-align: center;
+    font-family: Poppins-SemiBold;
+}
+
+/* TODO: Code to be used yet */
 .bet-circle {
     display: flex;
     justify-content: center;

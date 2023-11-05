@@ -21,6 +21,8 @@ let timerDuration = 180;
 let setTimer = true;
 let winner = 8;
 let winnerAmount = 0;
+const app = remote.app;
+const wheelMusic = new Audio('../assets/audio/wheelStart.wav');
 const options = {
   preview: false,
   width: "170px", //  width of content body
@@ -88,6 +90,7 @@ const xImages = [
 window.onload = () => {
   ipcRenderer.send("userData");
   ipcRenderer.send("getLastWinners");
+  selectCoin(5);
 };
 
 // Barcode functionality
@@ -109,8 +112,14 @@ ipcRenderer.on("claimReply", function (event, data) {
   console.log('data === ', data);
   document.getElementById('winningPopup').style.display = 'block';
   if (data) {
-    document.getElementById('win-message').innerHTML = data.msg +
-      `<div id="win-amount" class="win-amount">${data.winAmount ? data.winAmount : ''}</div>`;
+    let msg = data.msg;
+    if (msg === 'yes') {
+      document.getElementById('win-message').innerHTML = 'Congratulations! You Won' +
+        `<div id="win-amount" class="win-amount">${data.winAmt}</div>` +
+        `<div id="win-bet-time" class="win-bet-time">${data.betTime}</div>`;
+    } else {
+      document.getElementById('win-message').innerHTML = data.msg;
+    }
   }
 });
 
@@ -288,7 +297,7 @@ function setBet(betNumber) {
   if (!checkBalance(selectedCoinValue)) {
     return;
   }
-  let betNumberCss = `font-size: 16px; font-family: Poppins-SemiBold;`;
+  let betNumberCss = `font-size: 18px; font-family: Poppins-SemiBold;`;
   userBets = userBets.map((bet, index) => {
     if (betNumber === index) {
       bet += selectedCoinValue;
@@ -305,7 +314,7 @@ function setBet(betNumber) {
 
 function setMultiBets(type) {
   let index = [];
-  let betNumberCss = `font-size: 16px; font-family: Poppins-SemiBold;`;
+  let betNumberCss = `font-size: 18px; font-family: Poppins-SemiBold;`;
   let previousValue = parseInt(document.getElementById(type).innerText, 10);
   if (!selectedCoinValue || !checkBalance(selectedCoinValue * 4)) {
     return;
@@ -349,7 +358,7 @@ function setMultiBets(type) {
 }
 
 function rebet() {
-  let betNumberCss = `font-size: 16px; font-family: Poppins-SemiBold;`;
+  let betNumberCss = `font-size: 18px; font-family: Poppins-SemiBold;`;
   let betArray = JSON.parse(localStorage.getItem('betData'));
   let total = betArray.reduce(
     (accumulator, currentValue) => accumulator + currentValue
@@ -389,6 +398,13 @@ function reset() {
   resetBets();
   resetCoins();
   resetBalance();
+}
+
+function resetWinner() {
+  let wheelWinner = document.getElementById("wheel-winner");
+  let wheelWinnerAmount = document.getElementById("wheel-winner-amount");
+  wheelWinner.style.visibility = "hidden";
+  wheelWinnerAmount.style.visibility = "hidden";
 }
 
 function resetBets() {
@@ -481,12 +497,12 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
             <table style="border: none; margin:0;padding:0 ;font-family:Helvetica, sans-serif;">
                     <thead>
                         <tr style=" padding: 1px;height: 1px; border: none; ">
-                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">No</th>
-                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">qty</th>
-                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">No</th>
-                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">qty</th>
-                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">No</th>
-                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">qty</th>
+                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">C</th>
+                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">P</th>
+                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">C</th>
+                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">P</th>
+                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">C</th>
+                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">P</th>
                         </tr>
                     </thead>
                     <tbody>`;
@@ -495,7 +511,7 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       tablehtml += `<tr>`;
       if (betsData[m].bet1 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >01</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >AH</td>`;
         tablehtml +=
           `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet1 +
@@ -504,7 +520,7 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
 
       if (betsData[m].bet2 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >02</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >AS</td>`;
         tablehtml +=
           `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet2 +
@@ -516,7 +532,7 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet3 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >03</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >AD</td>`;
         tablehtml +=
           `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet3 +
@@ -528,7 +544,7 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet4 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >04</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >AC</td>`;
         tablehtml +=
           `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet4 +
@@ -540,7 +556,7 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet5 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >05</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >KH</td>`;
         tablehtml +=
           `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet5 +
@@ -552,7 +568,7 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet6 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >06</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >KS</td>`;
         tablehtml +=
           `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet6 +
@@ -564,7 +580,7 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet7 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >07</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >KD</td>`;
         tablehtml +=
           `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet7 +
@@ -576,7 +592,7 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet8 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >08</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >KC</td>`;
         tablehtml +=
           `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet8 +
@@ -588,7 +604,7 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet9 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >09</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >QH</td>`;
         tablehtml +=
           `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet9 +
@@ -600,7 +616,7 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet10 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >10</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >QS</td>`;
         tablehtml +=
           `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet10 +
@@ -612,7 +628,7 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet11 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >11</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >QD</td>`;
         tablehtml +=
           `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet11 +
@@ -624,15 +640,64 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet12 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >12</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >QC</td>`;
         tablehtml +=
           `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet12 +
           `</td>`;
       }
+      if (trSize == 3) {
+        tablehtml += `</tr ><tr>`;
+        trSize = 0;
+      }
+      if (betsData[m].bet13 > 0) {
+        trSize = trSize + 1;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >JH</td>`;
+        tablehtml +=
+          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          betsData[m].bet13 +
+          `</td>`;
+      }
+      if (trSize == 3) {
+        tablehtml += `</tr><tr>`;
+        trSize = 0;
+      }
+      if (betsData[m].bet14 > 0) {
+        trSize = trSize + 1;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >JS</td>`;
+        tablehtml +=
+          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          betsData[m].bet14 +
+          `</td>`;
+      }
+      if (trSize == 3) {
+        tablehtml += `</tr><tr>`;
+        trSize = 0;
+      }
+      if (betsData[m].bet15 > 0) {
+        trSize = trSize + 1;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >JD</td>`;
+        tablehtml +=
+          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          betsData[m].bet15 +
+          `</td>`;
+      }
+      if (trSize == 3) {
+        tablehtml += `</tr><tr>`;
+        trSize = 0;
+      }
+      if (betsData[m].bet16 > 0) {
+        trSize = trSize + 1;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >JC</td>`;
+        tablehtml +=
+          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          betsData[m].bet16 +
+          `</td>`;
+      }
+
       tablehtml += `</tr>`;
 
-      tablehtml += `</tbody></table>`;
+      tablehtml += `</tbody ></table > `;
       const data = [
         {
           type: "image",
@@ -646,12 +711,12 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
           value: "FOR AMUSEMENT ONLY",
           style: "margin:0; font-family:Helvetica, sans-serif;",
           css: { "font-weight": "700", "font-size": "10px" },
-          itemStyle1: `margin-left: -3px;font-size:12px;`, // Value Style
-          lineStyle1: `margin-left: -8px;font-size:12px;`,
+          itemStyle1: `margin - left: -3px; font - size: 12px; `, // Value Style
+          lineStyle1: `margin - left: -8px; font - size: 12px; `,
         },
         {
           type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
-          value: "12 Ka Power",
+          value: "Vijay Casino",
           style: "margin:0; font-family:Helvetica, sans-serif;",
           css: {
             "font-weight": "bold",
@@ -733,7 +798,7 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
           width: "160px", // width of image in px; default: auto
           height: "60px",
           position: "center",
-          style: `margin-bottom: 3px%;`,
+          style: `margin - bottom: 3px %; `,
         },
       ];
 
@@ -793,7 +858,7 @@ function startTimer() {
       if (timeRemaining < 10) {
         disableGame();
       }
-      if (timeRemaining % 20 === 0) {
+      if (timeRemaining < 1) {
         // instance.stop();
         spin();
       }
@@ -813,6 +878,7 @@ const pickColorByPercentage = (percentage, time) => {
 };
 
 function disableGame() {
+  resetWinner();
   let elements = document.getElementsByClassName("btn");
   for (let i = 0; i < elements.length; i++) {
     elements[i].style.pointerEvents = "none";
@@ -853,6 +919,9 @@ function spin() {
   ipcRenderer.send("currentWinner");
   let wheelTwo = document.getElementById("wheel-two");
   let wheelThree = document.getElementById("wheel-three");
+  wheelMusic.currentTime = 0;
+  wheelMusic.play();
+
   wheelTwo.classList.add("spin");
   wheelTwo.classList.remove("aWin");
   wheelTwo.classList.remove("kWin");
@@ -893,6 +962,10 @@ function stopWheelThree() {
   wheelThree.classList.remove("spinWheel");
   // wheelThree.style.animationFillMode = "forwards";
   // wheelThree.style.animationTimingFunction = "ease";
+  setTimeout(() => {
+    wheelMusic.currentTime = 4;
+    wheelMusic.play();
+  }, 2000);
   if (winner === 0 || winner === 4 || winner === 8 || winner === 12) {
     wheelThree.classList.add("hWin");
     setTimeout(() => {
@@ -920,6 +993,7 @@ function stopWheelThree() {
 }
 
 function setWinner(winner, winnerAmount) {
+  wheelMusic.pause();
   let wheelTwo = document.getElementById("wheel-two");
   let wheelThree = document.getElementById("wheel-three");
   let wheelWinner = document.getElementById("wheel-winner");
@@ -935,8 +1009,8 @@ function setWinner(winner, winnerAmount) {
     wheelThree.style.removeProperty("animation-fill-mode");
     wheelThree.style.removeProperty("animation-timing-function");
     wheelThree.classList.remove("spinWheel");
-    wheelWinner.style.visibility = "hidden";
-    wheelWinnerAmount.style.visibility = "hidden";
+    // wheelWinner.style.visibility = "hidden";
+    // wheelWinnerAmount.style.visibility = "hidden";
     setTimer = true;
     enableGame();
   }, 2000);
@@ -1035,7 +1109,7 @@ ipcRenderer.on("showAcccountData", function (event, data) {
   accountTableBody.innerHTML = rows.join('\n');
 
   if (accountSummary) {
-    document.getElementById('game-id-value').innerText = 'Lucky 16 Cards';
+    document.getElementById('game-id-value').innerText = accountSummary.username;
     document.getElementById('reatiler-code-value').innerText = accountSummary.username;
     document.getElementById('details-from-date').innerText = accountSummary.from;
     document.getElementById('details-to-date').innerText = accountSummary.to;
@@ -1103,7 +1177,7 @@ ipcRenderer.on("reprintData", function (e, reprintData) {
         <td>${data.drawTime}</td>
         <td>${data.betTotal}</td>
         <td>${data.winAmount}</td>
-        <td>${data.claimStatus}</td>
+        <td>${(data.claimStatus === true || data.claimStatus === 'true') ? 'Yes' : 'No'}</td>
         <td class="print-action"><button onclick="reprintTicket(${data.ticketId})" class="modal-reprint">P</button></td>
       </tr>`
   });
@@ -1121,7 +1195,8 @@ function logout() {
 
 function printAccount() {
 
-  let username = document.getElementById('game-id-value').innerText;
+  let gameId = document.getElementById('game-id-value').innerText;
+  let username = document.getElementById('reatiler-code-value').innerText;
   let from = document.getElementById('details-from-date').innerText;
   let To = document.getElementById('details-to-date').innerText;
   let totalPlay = document.getElementById('summary-play-value').innerText;
@@ -1134,12 +1209,12 @@ function printAccount() {
   let com = document.getElementById('commission-win-value').innerHTML;
   let tktData = ``;
   if (accountTabSelected === 1) {
-    tktData += `  <div style="margin-left:5px">
-      <span style="display: block; font-size: 11px;">Game Id: Lucky 16 Cards</span>
+    tktData += `  <div div style = "margin-left:5px" >
+      <span style="display: block; font-size: 11px;">Game Id:  &nbsp;` + (gameId) + `</span>
       <br>
       <span style="display: block; font-size: 11px;">Counter Sale</span>
       <br>
-      <span style="display: block; font-size: 11px;">Retailer Code &nbsp;:`+ (username) + `</span>
+      <span style="display: block; font-size: 11px;">Retailer Code: &nbsp;`+ (username) + `</span>
       <br>
       <span style="display: block; font-size: 11px;">`+ (from) + ` &nbsp; &nbsp;&nbsp; TO &nbsp;
           &nbsp;&nbsp; ` + (To) + `</span>
@@ -1158,11 +1233,11 @@ function printAccount() {
   } else {
 
     tktData += `  <div style="margin-left:5px">
-      <span style="display: block; font-size: 11px;">Game Id: Lucky 16 Cards</span>
+      <span style="display: block; font-size: 11px;">Game Id: &nbsp;` + (gameId) + `</span>
       <br>
       <span style="display: block; font-size: 11px;">Net To Pay</span>
       <br>
-      <span style="display: block; font-size: 11px;">Retailer Code &nbsp;`+ (username) + `</span>
+      <span style="display: block; font-size: 11px;">Retailer Code: &nbsp;`+ (username) + `</span>
       <br>
       <span style="display: block; font-size: 11px;">`+ (from) + ` &nbsp; &nbsp;&nbsp; TO &nbsp;
           &nbsp;&nbsp; ` + (To) + `</span>

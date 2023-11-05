@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "lucky 16 cards game application frontend UI",
   "main": "app.js",
-  "author": "Vspatil",
+  "author": "vs",
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,10 +16,12 @@
   "license": "ISC",
   "build": {
     "asar": true,
+    "compression": "maximum",
     "appId": "com.smasher.lucky16cards",
-    "productName": "lucky16cards-H",
+    "productName": "Lucky 16 Cards",
     "win": {
       "icon": "./src/assets/images/a2.ico",
+      "requestedExecutionLevel": "highestAvailable",
       "target": [
         {
           "target": "nsis",
@@ -37,10 +39,14 @@
       "createDesktopShortcut": "always"
     },
     "files": [
+      "./fonts/**/*",
+      "./audio/**/*",
+      "./images/**/*",
+      "./app/**/*",
       "./**/*"
     ],
     "extraMetadata": {
-      "main": "app/index.js"
+      "main": "app.js"
     },
     "extends": null
   },
