@@ -21,6 +21,7 @@ let timerDuration = 180;
 let setTimer = true;
 let winner = 8;
 let winnerAmount = 0;
+let initialLoad = false;
 const app = remote.app;
 const wheelMusic = new Audio('../assets/audio/wheelStart.wav');
 const options = {
@@ -90,6 +91,7 @@ const xImages = [
 window.onload = () => {
   ipcRenderer.send("userData");
   ipcRenderer.send("getLastWinners");
+  initialLoad = true;
   selectCoin(5);
 };
 
@@ -233,6 +235,16 @@ function setLastWinners(data) {
     }
     winTag.style.visibility = "visible";
   });
+  if (initialLoad) {
+    appendWinner(data);
+  }
+}
+
+function appendWinner(data) {
+  initialLoad = false;
+  let winner = (parseInt(data[0].winner, 10) - 1);
+  let winnerAmount = (data[0].xvalue - 1);
+  setWinner(winner, winnerAmount);
 }
 
 function checkBalance(bet) {
