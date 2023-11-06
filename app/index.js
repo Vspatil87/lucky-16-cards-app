@@ -309,14 +309,14 @@ function setBet(betNumber) {
   if (!checkBalance(selectedCoinValue)) {
     return;
   }
-  let betNumberCss = `font-size: 18px; font-family: Poppins-SemiBold;`;
+  // let betNumberCss = `font-size: 18px; font-family: Poppins-SemiBold;`;
   userBets = userBets.map((bet, index) => {
     if (betNumber === index) {
       bet += selectedCoinValue;
       if (bet) {
         document.getElementById(index).innerText = bet;
-        document.getElementById(index).style.cssText = betNumberCss;
-        // document.getElementById(index).classList.add('bet-circle');
+        // document.getElementById(index).style.cssText = betNumberCss;
+        document.getElementById(index).classList.add('bet-circle');
       }
     }
     return bet;
@@ -382,7 +382,8 @@ function rebet() {
     userBets[index] = bet;
     if (bet) {
       document.getElementById(index).innerText = bet;
-      document.getElementById(index).style.cssText = betNumberCss;
+      // document.getElementById(index).style.cssText = betNumberCss;
+      document.getElementById(index).classList.add('bet-circle');
     }
   });
   resetBalance();
@@ -425,8 +426,8 @@ function resetBets() {
   userBets = userBets.map((bet, index) => {
     let id = "" + index;
     document.getElementById(id).innerText = "Play";
-    document.getElementById(id).style.cssText = betNumberCss;
-    // document.getElementById(id).classList.remove('bet-circle');
+    // document.getElementById(id).style.cssText = betNumberCss;
+    document.getElementById(id).classList.remove('bet-circle');
     return 0;
   });
   allTypes.map((type) => {
@@ -974,18 +975,22 @@ function stopWheelThree() {
   wheelThree.classList.remove("spinWheel");
   // wheelThree.style.animationFillMode = "forwards";
   // wheelThree.style.animationTimingFunction = "ease";
-  setTimeout(() => {
-    wheelMusic.currentTime = 4;
-    wheelMusic.play();
-  }, 2000);
   if (winner === 0 || winner === 4 || winner === 8 || winner === 12) {
     wheelThree.classList.add("hWin");
+    setTimeout(() => {
+      wheelMusic.currentTime = 4;
+      wheelMusic.play();
+    }, 2000);
     setTimeout(() => {
       setWinner(winner, winnerAmount);
     }, 4000);
   }
   if (winner === 1 || winner === 5 || winner === 9 || winner === 13) {
     wheelThree.classList.add("sWin");
+    setTimeout(() => {
+      wheelMusic.currentTime = 4;
+      wheelMusic.play();
+    }, 2000);
     setTimeout(() => {
       setWinner(winner, winnerAmount);
     }, 5000);
@@ -998,6 +1003,10 @@ function stopWheelThree() {
   }
   if (winner === 3 || winner === 7 || winner === 11 || winner === 15) {
     wheelThree.classList.add("cWin");
+    setTimeout(() => {
+      wheelMusic.currentTime = 4;
+      wheelMusic.play();
+    }, 2000);
     setTimeout(() => {
       setWinner(winner, winnerAmount);
     }, 3000);

@@ -162,7 +162,6 @@ body {
     background-image: url('../assets/images/background/background-image.jpg');
     background-repeat: no-repeat;
     background-size: cover;
-    user-select: none;
     height: calc(100vh - 16px);
 }
 
@@ -278,7 +277,7 @@ body {
 }
 
 
-@media screen and (min-width: 1020px) and (max-width: 1300px) {
+@media screen and (min-width: 1020px) and (max-width: 1400px) {
     .wheel-container {
         position: relative;
         display: flex;
@@ -287,6 +286,7 @@ body {
         width: 30%;
         min-width: 30%;
         max-width: 30%;
+        user-select: none;
     }
 
     .wheel-one {
@@ -362,7 +362,7 @@ body {
     }
 }
 
-@media screen and (min-width: 1300px) {
+@media screen and (min-width: 1400px) {
     .wheel-container {
         position: relative;
         display: flex;
@@ -371,6 +371,7 @@ body {
         width: 35%;
         min-width: 35%;
         max-width: 35%;
+        user-select: none;
     }
 
     .wheel-one {
@@ -454,6 +455,7 @@ body {
     align-items: center;
     width: 50%;
     height: calc(100% - 10px);
+    user-select: none;
 }
 
 .cards-row {
@@ -803,6 +805,7 @@ body {
     width: 20%;
     max-height: calc(100% - 140px);
     min-height: calc(100% - 90px);
+    user-select: none;
 }
 
 .timer {
@@ -926,6 +929,7 @@ input::placeholder {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    user-select: none;
 }
 
 .coins-btn-container>img {
@@ -1382,26 +1386,26 @@ td {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid var(--blackColor);
+    border: 2px solid darkgoldenrod;
     border-radius: 40px;
     width: 45px;
     height: 45px;
-    background: var(--whiteColor);
+    background: gold;
     color: var(--blackColor) !important;
     font-size: 16px !important;
     font-family: Poppins-SemiBold !important;
-    top: 42% !important;
+    top: 40% !important;
 }
 
 .bet-circle-for-all {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid var(--blackColor);
+    border: 2px solid darkgoldenrod;
     border-radius: 40px;
     width: 45px;
     height: 45px;
-    background: var(--whiteColor);
+    background: gold;
     color: var(--blackColor) !important;
     font-size: 16px !important;
     font-family: Poppins-SemiBold !important;
