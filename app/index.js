@@ -75,7 +75,8 @@ const winnerImages = [
   "../assets/images/win-cards/15.png",
 ];
 const xImages = [
-  "../assets/images/1x-to-10x/1.png",
+  // "../assets/images/1x-to-10x/1.png",
+  "../assets/images/1x-to-10x/N.png",
   "../assets/images/1x-to-10x/2.png",
   "../assets/images/1x-to-10x/3.png",
   "../assets/images/1x-to-10x/4.png",
@@ -94,6 +95,13 @@ window.onload = () => {
   initialLoad = true;
   selectCoin(5);
 };
+
+// Popup Closing on space
+document.addEventListener("keypress", function (event) {
+  if (event.keyCode === 32 || event.which === 32) {
+    closePopup();
+  }
+});
 
 // Barcode functionality
 document.getElementById("ticketValue").addEventListener("keypress", function (event) {
@@ -117,13 +125,49 @@ ipcRenderer.on("claimReply", function (event, data) {
     let msg = data.msg;
     if (msg === 'yes') {
       document.getElementById('win-message').innerHTML = 'Congratulations! You Won' +
-        `<div id="win-amount" class="win-amount">${data.winAmt}</div>` +
+        `<div id="win-amount" class="win-amount">${data.winAmt} <span>(${getWinnerCard(data.betNo)} - ${getXvalue(data.xvalue)})</span></div>` +
         `<div id="win-bet-time" class="win-bet-time">${data.betTime}</div>`;
     } else {
-      document.getElementById('win-message').innerHTML = data.msg;
+      document.getElementById('win-message').innerHTML = getMessage(data.msg);
     }
   }
 });
+
+function getMessage(id) {
+  let msg = '';
+  switch (id) {
+    case 1:
+      msg = 'Better luck next time';
+      break;
+
+    case 2:
+      msg = 'Already claimed';
+      break;
+
+    case 3:
+      msg = 'Result not declared';
+      break;
+
+    case 4:
+      msg = 'Invalid ticket or retailer id';
+      break;
+  }
+
+  return msg;
+}
+
+function getWinnerCard(betNo) {
+  let src = winnerImages[betNo - 1];
+  return `<img src="${src}"></img>`;
+}
+
+function getXvalue(value) {
+  if (value && parseInt(value, 10) < 2) {
+    return `N`;
+  } else {
+    value + 'X';
+  }
+}
 
 function closePopup() {
   document.getElementById('winningPopup').style.display = 'none';

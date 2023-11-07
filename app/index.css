@@ -1376,6 +1376,11 @@ td {
     font-size: 30px;
 }
 
+.win-amount>span>img {
+    width: 30px;
+    height: 25px;
+}
+
 .win-bet-time {
     text-align: center;
     font-family: Poppins-SemiBold;
