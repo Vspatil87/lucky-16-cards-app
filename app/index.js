@@ -163,6 +163,10 @@ function getWinnerCard(betNo) {
 }
 
 function getXvalue(value) {
+  if (!value) {
+    return '';
+  }
+
   if (value < 2) {
     return `N`;
   } else {
