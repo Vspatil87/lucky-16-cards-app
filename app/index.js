@@ -163,10 +163,11 @@ function getWinnerCard(betNo) {
 }
 
 function getXvalue(value) {
-  if (value && parseInt(value, 10) < 2) {
+  if (value < 2) {
     return `N`;
   } else {
-    value + 'X';
+    let xval = value + 'X';
+    return xval;
   }
 }
 
