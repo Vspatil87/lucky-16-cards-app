@@ -121,6 +121,7 @@ document.getElementById("ticketValue").addEventListener("keypress", function (ev
 ipcRenderer.on("claimReply", function (event, data) {
   console.log('data === ', data);
   document.getElementById('winningPopup').style.display = 'block';
+  document.getElementById("ticketValue").blur();
   if (data) {
     let msg = data.msg;
     if (msg === 'yes') {
