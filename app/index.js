@@ -6,6 +6,7 @@ const dialog = electron.remote.dialog;
 const path = require("path");
 const moment = require("moment-timezone");
 const timeInKolkata = moment.tz("Asia/Kolkata");
+const JsBarcode = require('jsbarcode');
 
 let printerNameDefault;
 let webContents = remote.getCurrentWebContents();
@@ -556,36 +557,35 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       } else {
         savesPath = path.join(rootFolder, "/resources/");
       }
-      let tablehtml = `
-            <table style="border: none; margin:0;padding:0 ;font-family:Helvetica, sans-serif;">
-                    <thead>
-                        <tr style=" padding: 1px;height: 1px; border: none; ">
-                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">C</th>
-                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">P</th>
-                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">C</th>
-                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">P</th>
-                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">C</th>
-                            <th style=" padding: 0;height: 1px; width:2px; border: none; font-size = 3px ;font-family:Helvetica, sans-serif;">P</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
+      let tablehtml = `<table style="border: none; margin:0;padding:0 ;font-family:Helvetica, sans-serif;">
+        <thead>
+            <tr style="padding: 1px;height: 1px; border: none; ">
+                <th style="padding: 0;height: 1px; width:2px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;">C</th>
+                <th style="padding: 0;height: 1px; width:2px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;">P</th>
+                <th style="padding: 0;height: 1px; width:2px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;">C</th>
+                <th style="padding: 0;height: 1px; width:2px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;">P</th>
+                <th style="padding: 0;height: 1px; width:2px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;">C</th>
+                <th style="padding: 0;height: 1px; width:2px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;">P</th>
+            </tr>
+        </thead>
+      <tbody>`;
 
       let trSize = 0;
       tablehtml += `<tr>`;
       if (betsData[m].bet1 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >AH</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >AH</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet1 +
           `</td>`;
       }
 
       if (betsData[m].bet2 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >AS</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >AS</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet2 +
           `</td>`;
       }
@@ -595,9 +595,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet3 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >AD</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >AD</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet3 +
           `</td>`;
       }
@@ -607,9 +607,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet4 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >AC</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >AC</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet4 +
           `</td>`;
       }
@@ -619,9 +619,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet5 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >KH</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >KH</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet5 +
           `</td>`;
       }
@@ -631,9 +631,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet6 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >KS</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >KS</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet6 +
           `</td>`;
       }
@@ -643,9 +643,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet7 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >KD</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >KD</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet7 +
           `</td>`;
       }
@@ -655,9 +655,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet8 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >KC</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >KC</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet8 +
           `</td>`;
       }
@@ -667,9 +667,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet9 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >QH</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >QH</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet9 +
           `</td>`;
       }
@@ -679,9 +679,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet10 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >QS</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >QS</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet10 +
           `</td>`;
       }
@@ -691,9 +691,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet11 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >QD</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >QD</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet11 +
           `</td>`;
       }
@@ -703,9 +703,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet12 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >QC</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >QC</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet12 +
           `</td>`;
       }
@@ -715,9 +715,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet13 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >JH</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >JH</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet13 +
           `</td>`;
       }
@@ -727,9 +727,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet14 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >JS</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >JS</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet14 +
           `</td>`;
       }
@@ -739,9 +739,9 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet15 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >JD</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >JD</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet15 +
           `</td>`;
       }
@@ -751,16 +751,16 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
       }
       if (betsData[m].bet16 > 0) {
         trSize = trSize + 1;
-        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >JC</td>`;
+        tablehtml += `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >JC</td>`;
         tablehtml +=
-          `<td style=" padding: 1px;height: 1px; border: none; font-size = 4px ;font-family:Helvetica, sans-serif;" >` +
+          `<td style=" padding: 1px;height: 1px; border: none; font-size:12px ;font-family:Helvetica, sans-serif;" >` +
           betsData[m].bet16 +
           `</td>`;
       }
 
       tablehtml += `</tr>`;
 
-      tablehtml += `</tbody ></table > `;
+      tablehtml += `</tbody></table>`;
       const data = [
         {
           type: "image",
@@ -800,7 +800,6 @@ ipcRenderer.on("generateTicket", async (event, betsData) => {
             padding: "0",
           },
         },
-
         {
           type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
           value: tablehtml,
@@ -883,14 +882,25 @@ function barcodeimage(dataURL, ticketId) {
 }
 
 async function print_the_data(printer_data, f = 0) {
-  if (printer_data[f]) {
-    PosPrinter.print(printer_data[f], options)
-      .then((result_print) => {
-        print_the_data(printer_data, f + 1);
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
+  if (printer_data.length) {
+    // PosPrinter.print(printer_data[f], options)
+    //   .then((result_print) => {
+    //     print_the_data(printer_data, f + 1);
+    //   })
+    //   .catch((error) => {
+    //     console.log("error", error);
+    //   });
+    for (let f = 0; f < printer_data.length; f++) {
+      PosPrinter.print(printer_data[f], options)
+        .then((result_print) => {
+          ////console.log("in print for lopppppppppppp aaaaaaaaaaaaaa-----",f,"   result----",result_print);
+        })
+        .catch((error) => {
+          ////console.log("error aaaaaaaaaaaaaa-----",error,"a----",printer_data[f]);
+          // continue for_print;
+          console.log("error", error);
+        })
+    }
   }
 }
 
